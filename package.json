@@ -1,0 +1,24 @@
+{
+  "name": "swiffer",
+  "version": "0.0.0",
+  "description": "Swiffer error and event pub sub server",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/puzzfuzz/swiffer.git"
+  },
+  "author": "Chris Puzzo <chris.puzzo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/puzzfuzz/swiffer/issues"
+  },
+  "dependencies": {
+    "underscore": "~1.7.0",
+    "redis": "~0.12.1",
+    "axon": "~2.0.1",
+    "express": "^3.0.0"
+  }
+}
