@@ -22,11 +22,11 @@ app.post('/exception', exception.save, exception.send);
 app.get('/exception', exception.get);
 
 app.listen(config.port, function(){
-	console.log('Server is listening on port', config.port);
-	app.prompt.setStatusLines([app.prompt.clc.blackBright("Listening on port " + config.port)]);
+	app.prompt.setStatusLines([app.prompt.clc.green("Listening on port " + config.port)]);
 });
 
 app.prompt = new Prompt();
+app.prompt.setStatusLines([app.prompt.clc.blackBright("Starting up...")]);
 console.log = function() {
 	app.prompt.log.apply(app.prompt, arguments);
 };
