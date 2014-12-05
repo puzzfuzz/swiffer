@@ -29,4 +29,4 @@ app.prompt = new Prompt();
 app.prompt.setStatusLines([app.prompt.clc.blackBright("Starting up...")]);
 console.log = function() {
 	app.prompt.log.apply(app.prompt, arguments);
-};
+
