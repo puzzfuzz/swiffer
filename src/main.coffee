@@ -6,12 +6,18 @@ ModuleManager = require './lib/modulemanager'
 bodyParser = require 'body-parser'
 vm = require 'vm'
 
+app = express()
+server = require('http').Server(app)
+io = require('socket.io').listen(server)
+
+
+staticRoot = __dirname + config['staticRoot']
+
 class Swiffer
 	constructor: ->
 		@setupPrompt()
 		@module = new ModuleManager @prompt, @
 		@setupExpress()
-
 
 	setupPrompt: ->
 		@prompt = new Prompt
@@ -30,19 +36,43 @@ class Swiffer
 
 
 	setupExpress: ->
-		@app = express()
+#		@app = express()
 
-		@app.use (req, res, next)=>
+#		@app.use (req, res, next)=>
+		app.use (req, res, next)=>
 			res.header "Access-Control-Allow-Origin", "*"
 			res.header "Access-Control-Allow-Headers", "X-Requested-With"
 			res.header "Access-Control-Allow-Headers", "Content-Type"
 			next()
 
-		@app.use bodyParser.json()
+#		@app.use bodyParser.json()
+		app.use bodyParser.json()
+#		@app.use express.static(staticRoot)
+		app.use express.static(staticRoot)
 
-		@app.listen config.port, =>
+#		@app.get '/', (req, res) =>
+		app.get '/', (req, res) =>
+			console.log "handling default root..."
+			res.sendFile('index.html', {root:staticRoot})
+
+		@setupSocket()
+
+#		@app.listen config.port, =>
+
+		#--- MUST listen on server, not app for socket.io to work
+		server.listen config.port, =>
 			@prompt.setStatusLines [@prompt.clc.green "Listening on port #{config.port}"]
 
+	setupSocket: ->
+#		@server = require('http').Server(@app)
+#		@io = require('socket.io')(@server)
+
+		io.sockets.on 'connection', (socket)=>
+			exception.get (err, data)=>
+				if (err)
+					return
+				data.forEach (exception) =>
+					socket.emit 'exception', exception
 
 	parseCommand: (msg)->
 		index = msg.indexOf(" ")

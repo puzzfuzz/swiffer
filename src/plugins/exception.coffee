@@ -19,17 +19,20 @@ class ExceptionHandler
 				return res.json(503, { error: true })
 			next()
 			model.trim()
+
 	send: (req, res, next)->
 		exception = _.clone(req.body)
 		model.send exception, (err)=>
 			if (err)
 				return res.json(503, { error: true })
 			res.json(200, { error: null })
+
 	get: (req, res)->
 		model.get (err, data)=>
 			if (err)
 				return res.json(503, { error: true })
 			res.json(200, data)
+
 	unload: ->
 		@router.routes = {}
 

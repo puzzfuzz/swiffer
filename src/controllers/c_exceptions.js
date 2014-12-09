@@ -30,9 +30,9 @@ exports.send = function(req, res, next) {
 /**
  * Get 10 exception from model
  */
-exports.get = function(req, res) {
+exports.get = function(callback) {
 	model.get(function(err, data) {
-		if (err) return res.json(503, { error: true });
-		res.json(200, data);
+		data = _(data).reverse();
+		callback(err, data);
 	});
 };
