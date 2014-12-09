@@ -1,5 +1,6 @@
 EventEmitter = require('events').EventEmitter
 domain = require 'domain'
+express = require 'express'
 
 class ModuleManager
 	constructor: (@logger, @swiffer)->
@@ -21,40 +22,46 @@ class ModuleManager
 		return @eventProxies[name]
 
 	getDomain: (name)->
-		if (@domains[name])
+		if @domains[name] and !@domains[name]._disposed	
 			return @domains[name]
+		console.log "Creating a domain for #{name}"
 		d = @domains[name] = domain.create()
-		d.on 'error', (er)=>
-			@logger.log er
+		d.on 'error', (e)=>
+			@logger.log @logger.clc.red(e.message) + @logger.clc.cyan(" in #{name}")
+			@logger.log @logger.clc.red(e)
+			@logger.log @logger.clc.red(e.stack)
+			@unloadModule name
+			@loadModule name
 		return @domains[name]
 
 	cleanUp: (name)->
 		delete require.cache[require.resolve("../plugins/#{name}")]
 		delete @eventProxies[name]
+		@domains[name]?.dispose()
 		delete @domains[name]
+		delete @modules[name]
 
 	loadModule: (name)->
-		try
+		myDomain = @getDomain name
+		myDomain.run =>
 			@logger.log @logger.clc.cyan "About to load #{name}"
 			@unloadModule name
 			Module = require("../plugins/#{name}")
 			@modules[name] = new Module @logger, @swiffer
-		catch e
-			@logger.log @logger.clc.red(e.message) + @logger.clc.cyan(" in #{name}")
-			@logger.log @logger.clc.red(e)
 
 	unloadModule: (name)->
-		try
-			module = @modules[name]
-			module?.unload()
+		myDomain = @getDomain name
+		myDomain.run =>
+			try
+				module = @modules[name]
+				module?.unload()
 
-			@swiffer.app._router.stack = @swiffer.app._router.stack.filter (route)=>
-				route.handle != module.router
+				@swiffer.app._router.stack = @swiffer.app._router.stack.filter (route)=>
+					route.handle != module._router_ref
 
-		catch e
-		finally
-			delete @modules[name]
-			@cleanUp name
+			catch e
+			finally
+				@cleanUp name
 
 
 

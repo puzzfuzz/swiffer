@@ -3,13 +3,45 @@ readline = require 'readline'
 EventEmitter = require('events').EventEmitter
 config = require '../../config'
 util = require 'util'
+fs = require 'fs'
 
 class Prompt extends EventEmitter
-	constructor: ->
+	constructor: (@swiffer)->
 		@clc = clc
 		@rl = readline.createInterface
 			input: process.stdin
 			output: process.stdout
+			completer: (line, callback)=>
+				if line.indexOf("/loadModule") == 0 and line.length > 10
+					fs.readdir "#{__dirname}/../plugins/", (err, files)=>
+						if err
+							@log err
+							return callback err
+
+						lines = for file in files
+							"/loadModule #{i = file.indexOf('.'); file.substr 0, (if i > 0 then i else file.length) }"
+						return callback null, [lines, line]
+
+				else if line.indexOf("/unloadModule") == 0 and line.length > 12
+					modStart = line.substr(13)
+
+					if !@swiffer.module
+						return callback null, [[], line]
+
+					availableModules = for own module of @swiffer.module.modules when module.indexOf(modStart) is 0
+						module
+
+					lines = for module in availableModules
+						"/unloadModule #{module}"
+					return callback null, [lines, line]
+
+				else
+					completions = ['/e', '/restart', '/loadModule', '/unloadModule']
+					hits = completions.filter (c)-> c.indexOf(line) == 0
+
+					callback null, [ (if hits.length then hits else completions), line]
+
+
 		@statusLines = [clc.blackBright 'No status']
 
 		@rl.setPrompt(config.prompt, config.prompt.length)
