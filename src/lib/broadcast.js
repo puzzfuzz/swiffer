@@ -1,14 +1,11 @@
-'use strict';
-
-var axon = require('axon');
-var socket = axon.socket('pub');
-
-socket.bind(1338);
+var config = require('../../config');
+//var io = require('socket.io');
 
 /**
  * Send a exception to the publish socket
  * @param {Object} obj
  */
-exports.send = function(obj) {
-	socket.send(obj);
+exports.send = function(io, obj) {
+	console.log('emitting exception... ');
+	io.sockets.emit('exception', obj);
 };

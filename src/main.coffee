@@ -11,7 +11,7 @@ server = require('http').Server(app)
 io = require('socket.io').listen(server)
 
 
-staticRoot = __dirname + config['staticRoot']
+staticRoot = __dirname + config.staticRoot
 
 class Swiffer
 	constructor: ->
@@ -36,36 +36,31 @@ class Swiffer
 
 
 	setupExpress: ->
-#		@app = express()
+		#scoped app out for socket-io config, prolly not the best idea - CP
+		@app = app
 
-#		@app.use (req, res, next)=>
-		app.use (req, res, next)=>
+		@app.use (req, res, next)=>
 			res.header "Access-Control-Allow-Origin", "*"
 			res.header "Access-Control-Allow-Headers", "X-Requested-With"
 			res.header "Access-Control-Allow-Headers", "Content-Type"
 			next()
 
-#		@app.use bodyParser.json()
-		app.use bodyParser.json()
-#		@app.use express.static(staticRoot)
-		app.use express.static(staticRoot)
+		@app.use bodyParser.json()
+		@app.use express.static(staticRoot)
 
-#		@app.get '/', (req, res) =>
-		app.get '/', (req, res) =>
+		@app.get '/', (req, res) =>
 			console.log "handling default root..."
 			res.sendFile('index.html', {root:staticRoot})
 
 		@setupSocket()
 
 #		@app.listen config.port, =>
-
 		#--- MUST listen on server, not app for socket.io to work
 		server.listen config.port, =>
 			@prompt.setStatusLines [@prompt.clc.green "Listening on port #{config.port}"]
 
 	setupSocket: ->
-#		@server = require('http').Server(@app)
-#		@io = require('socket.io')(@server)
+		@io = io
 
 		io.sockets.on 'connection', (socket)=>
 			exception.get (err, data)=>

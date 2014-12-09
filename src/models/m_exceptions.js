@@ -27,8 +27,9 @@ exports.trim = function() {
  * @param {Array} exception
  * @param {Function} callback
  */
-exports.send = function(exception, callback) {
-	broadcast.send(exception);
+//TODO move io into socket/broadcast module
+exports.send = function(io, exception, callback) {
+	broadcast.send(io, exception);
 	callback(null, null);
 };
 

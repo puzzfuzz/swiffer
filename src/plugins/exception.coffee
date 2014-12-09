@@ -12,7 +12,7 @@ class ExceptionHandler
 
 		@swiffer.app.use @router
 
-	save: (req, res, next)->
+	save: (req, res, next)=>
 		exception = _.clone(req.body)
 		model.save exception, (err)=>
 			if (err)
@@ -20,9 +20,10 @@ class ExceptionHandler
 			next()
 			model.trim()
 
-	send: (req, res, next)->
+	send: (req, res, next)=>
 		exception = _.clone(req.body)
-		model.send exception, (err)=>
+		#TODO move io into socket / broadcast module
+		model.send @swiffer.io, exception, (err)=>
 			if (err)
 				return res.json(503, { error: true })
 			res.json(200, { error: null })
