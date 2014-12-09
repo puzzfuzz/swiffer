@@ -5,10 +5,6 @@ ModuleManager = require './lib/modulemanager'
 bodyParser = require 'body-parser'
 vm = require 'vm'
 
-app = express()
-io = require('socket.io').listen(server)
-
-
 staticRoot = __dirname + config.staticRoot
 
 class Swiffer
@@ -68,7 +64,7 @@ class Swiffer
 
 	setupExpress: ->
 		#scoped app out for socket-io config, prolly not the best idea - CP
-		@app = app
+		@app = express()
 
 		@app.use (req, res, next)=>
 			res.header "Access-Control-Allow-Origin", "*"
@@ -87,13 +83,13 @@ class Swiffer
 
 #		@app.listen config.port, =>
 		#--- MUST listen on server, not app for socket.io to work
-		require('http').Server(app).listen config.port, =>
+		require('http').Server(@app).listen config.port, =>
 			@prompt.setStatusLines [@prompt.clc.green "Listening on port #{config.port}"]
 
 	setupSocket: ->
-		@io = io
+		@io = require('socket.io').listen(require('http').Server(@app))
 
-		io.sockets.on 'connection', (socket)=>
+		@io.sockets.on 'connection', (socket)=>
 			exception.get (err, data)=>
 				if (err)
 					return

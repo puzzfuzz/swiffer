@@ -1,5 +1,10 @@
 {
 	"prompt": "Swiffer> ",
 	"port": 1337,
-	"staticRoot": "/public/"
+	"staticRoot": "/public/",
+
+	"restartTime": 5,
+	"modules": [
+		"exception"
+	]
 }
