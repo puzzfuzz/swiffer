@@ -5,6 +5,12 @@ ModuleManager = require './lib/modulemanager'
 bodyParser = require 'body-parser'
 vm = require 'vm'
 
+app = express()
+io = require('socket.io').listen(server)
+
+
+staticRoot = __dirname + config.staticRoot
+
 class Swiffer
 	constructor: ->
 		@setupPrompt()
@@ -21,9 +27,7 @@ class Swiffer
 
 		@module = null
 		@app = null
-		@expressServer.close()
-		@expressServer = null
-
+		require('http').Server(app).close()
 
 		delete require.cache[require.resolve('../config')]
 		delete require.cache[require.resolve('./lib/modulemanager')]
@@ -46,7 +50,6 @@ class Swiffer
 		restartWaiter()
 
 
-
 	setupPrompt: ->
 		@prompt = new Prompt @
 		@prompt.setStatusLines [@prompt.clc.blackBright "Starting up..."]
@@ -64,7 +67,8 @@ class Swiffer
 
 
 	setupExpress: ->
-		@app = express()
+		#scoped app out for socket-io config, prolly not the best idea - CP
+		@app = app
 
 		@app.use (req, res, next)=>
 			res.header "Access-Control-Allow-Origin", "*"
@@ -73,10 +77,28 @@ class Swiffer
 			next()
 
 		@app.use bodyParser.json()
+		@app.use express.static(staticRoot)
 
-		@expressServer = @app.listen config.port, =>
+		@app.get '/', (req, res) =>
+			console.log "handling default root..."
+			res.sendFile('index.html', {root:staticRoot})
+
+		@setupSocket()
+
+#		@app.listen config.port, =>
+		#--- MUST listen on server, not app for socket.io to work
+		require('http').Server(app).listen config.port, =>
 			@prompt.setStatusLines [@prompt.clc.green "Listening on port #{config.port}"]
 
+	setupSocket: ->
+		@io = io
+
+		io.sockets.on 'connection', (socket)=>
+			exception.get (err, data)=>
+				if (err)
+					return
+				data.forEach (exception) =>
+					socket.emit 'exception', exception
 
 	parseCommand: (msg)->
 		index = msg.indexOf(" ")

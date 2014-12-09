@@ -23,6 +23,8 @@
     "coffee-script": "^1.8.0",
     "express": "^4.0.0",
     "redis": "~0.12.1",
-    "underscore": "~1.7.0"
+    "underscore": "~1.7.0",
+    "socket.io": "~1.2.1",
+    "http": "0.0.0"
   }
 }
