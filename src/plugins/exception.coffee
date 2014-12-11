@@ -1,39 +1,59 @@
 _ = require 'underscore'
-model = require '../models/m_exceptions'
 express = require 'express'
+bodyParser = require 'body-parser'
 
 class ExceptionHandler
-	constructor: (@logger, @swiffer)->
+	constructor: (@logger, @swiffer, @events)->
 		@logger.log "Exception handler constructor is running!!"
 		@router = express.Router()
+
+		@router.use bodyParser.json()
 
 		@router.post '/exception', @save, @send
 		@router.get '/exception', @get
 
-		@swiffer.app.use @router
+		# @swiffer.app.use @router
+
+
+		@events.on 'connection', (socket)=>
+			socket.emit 'hello', {from: 'exception', to:'yours truely'}
+			# model.get (err, data)=>
+			# 	if (err)
+			# 		return
+			# 	data.forEach (exception) =>
+			# 		socket.emit 'exception', exception
 
 	save: (req, res, next)=>
 		exception = _.clone(req.body)
-		model.save exception, (err)=>
-			if (err)
-				return res.json(503, { error: true })
-			next()
-			model.trim()
+		next()
+		# model.save exception, (err)=>
+		# 	if (err)
+		# 		return res.json(503, { error: true })
+		# 	model.trim()
 
 	send: (req, res, next)=>
+		@logger.log req.body
 		exception = _.clone(req.body)
+		res.status(200).json({ error: null })
+		# @logger.log exception
+		@events.emit 'io', {
+			name: 'exception'
+			data: exception
+		}
 		#TODO move io into socket / broadcast module
-		model.send @swiffer.io, exception, (err)=>
-			if (err)
-				return res.json(503, { error: true })
-			res.json(200, { error: null })
+		# model.send @swiffer.io, exception, (err)=>
+		# 	if (err)
+		# 		return res.json(503, { error: true })
+		# 	res.json(200, { error: null })
 
-	get: (req, res)->
-		model.get (err, data)=>
-			if (err)
-				return res.json(503, { error: true })
-			logger.log "This is running, at least! and restarts"
-			res.status(200).json(data)
+	get: (req, res)=>
+		@logger.log "Exception get!"
+		res.status(200).json({nothing: "indeed"})
+		# model.get (err, data)=>
+		# 	@logger.log "This is running, at least! and restarts"
+		# 	if (err)
+		# 		return res.json(503, { error: true })
+		# 	res.status(200).json(data)
 
 	unload: ->
 		@router.routes = {}

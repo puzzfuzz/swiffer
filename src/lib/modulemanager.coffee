@@ -8,9 +8,9 @@ class ModuleManager
 		@eventProxies = {}
 		@domains = {}
 
-	proxyEvent: (event)->
+	proxyEvent: (event, data)->
 		for name, emitter of @eventProxies
-			emitter.emit.apply emitter, event
+			emitter.emit event, data
 
 	getEventProxy: (name)->
 		if (@eventProxies[name])
@@ -19,11 +19,15 @@ class ModuleManager
 		@eventProxies[name] = new EventEmitter()
 		@getDomain(name).add @eventProxies[name]
 
+		@eventProxies[name].on 'io', (data)=>
+			@swiffer.io.sockets.emit data.name, data.data
+
 		return @eventProxies[name]
 
 	getDomain: (name)->
 		if @domains[name] and !@domains[name]._disposed	
 			return @domains[name]
+
 		console.log "Creating a domain for #{name}"
 		d = @domains[name] = domain.create()
 		d.on 'error', (e)=>
@@ -31,7 +35,7 @@ class ModuleManager
 			@logger.log @logger.clc.red(e)
 			@logger.log @logger.clc.red(e.stack)
 			@unloadModule name
-			@loadModule name
+			# @loadModule name
 		return @domains[name]
 
 	cleanUp: (name)->
@@ -42,26 +46,40 @@ class ModuleManager
 		delete @modules[name]
 
 	loadModule: (name)->
+		@unloadModule name
 		myDomain = @getDomain name
 		myDomain.run =>
 			@logger.log @logger.clc.cyan "About to load #{name}"
-			@unloadModule name
 			Module = require("../plugins/#{name}")
-			@modules[name] = new Module @logger, @swiffer
+			@modules[name] = new Module @logger, @swiffer, @getEventProxy(name)
+
+
+			if @modules[name].router
+				@logger.log "Setting up the router proxy"
+				router = express.Router()
+				router.use (req, res, next)=>
+						console.log("I am nexting!!!")
+						myDomain.exit()
+						@getDomain(name).run next
+					, @modules[name].router
+
+				# router.use @modules[name].router
+				@swiffer.app.use router
+				@modules[name]._router_ref = router
 
 	unloadModule: (name)->
-		myDomain = @getDomain name
-		myDomain.run =>
-			try
-				module = @modules[name]
-				module?.unload()
+		if !@modules[name]
+			return @cleanUp name
+		try
+			module = @modules[name]
+			module?.unload()
 
-				@swiffer.app._router.stack = @swiffer.app._router.stack.filter (route)=>
-					route.handle != module._router_ref
+			@swiffer.app._router.stack = @swiffer.app._router.stack.filter (route)=>
+				route.handle != module._router_ref
 
-			catch e
-			finally
-				@cleanUp name
+		catch e
+		finally
+			@cleanUp name
 
 
 

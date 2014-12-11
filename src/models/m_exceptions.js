@@ -3,6 +3,8 @@
 var redis = require('../lib/redis');
 var broadcast = require('../lib/broadcast');
 
+
+console.log("m exception is running");
 /**
  * Save exception to database
  * @param {Array} exception
@@ -38,7 +40,9 @@ exports.send = function(io, exception, callback) {
  * @param {Function} callback
  */
 exports.get = function(callback) {
+	console.log("Model's get is being called");
 	redis.lrange('exceptions', 0, -1, function(err, data){
+		console.log("Model's get finished :D");
 		if (err) return callback(err, null);
 		callback(null, data.map(JSON.parse));
 	});

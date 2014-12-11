@@ -4,6 +4,7 @@
 // except 'app' ones, 
 requirejs.config({
 	"baseUrl": "js/app",
+	urlArgs: '_=' + (new Date()).getTime(),
 	"paths": {
 		"app":          "app",
 		"jquery":       "//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min",

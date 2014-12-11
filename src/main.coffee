@@ -23,7 +23,7 @@ class Swiffer
 
 		@module = null
 		@app = null
-		require('http').Server(app).close()
+		@appServer.close()
 
 		delete require.cache[require.resolve('../config')]
 		delete require.cache[require.resolve('./lib/modulemanager')]
@@ -64,7 +64,7 @@ class Swiffer
 
 	setupExpress: ->
 		#scoped app out for socket-io config, prolly not the best idea - CP
-		@app = express()
+		@app = express();
 
 		@app.use (req, res, next)=>
 			res.header "Access-Control-Allow-Origin", "*"
@@ -76,25 +76,27 @@ class Swiffer
 		@app.use express.static(staticRoot)
 
 		@app.get '/', (req, res) =>
-			console.log "handling default root..."
+			@prompt.log "handling default root..."
 			res.sendFile('index.html', {root:staticRoot})
-
-		@setupSocket()
 
 #		@app.listen config.port, =>
 		#--- MUST listen on server, not app for socket.io to work
-		require('http').Server(@app).listen config.port, =>
+		@appServer = require('http').createServer(@app)
+		@appServer.listen config.port, =>
 			@prompt.setStatusLines [@prompt.clc.green "Listening on port #{config.port}"]
 
+		@setupSocket()
+
 	setupSocket: ->
-		@io = require('socket.io').listen(require('http').Server(@app))
+		@io = require('socket.io').listen(@appServer)
 
 		@io.sockets.on 'connection', (socket)=>
-			exception.get (err, data)=>
-				if (err)
-					return
-				data.forEach (exception) =>
-					socket.emit 'exception', exception
+			@module.proxyEvent 'connection', socket
+		# 	exception.get (err, data)=>
+		# 		if (err)
+		# 			return
+		# 		data.forEach (exception) =>
+		# 			socket.emit 'exception', exception
 
 	parseCommand: (msg)->
 		index = msg.indexOf(" ")

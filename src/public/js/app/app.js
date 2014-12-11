@@ -18,9 +18,13 @@ define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'socket.io', '
 				});
 			});
 
-			var socket = io.connect("http://localhost:1337");
+			var socket = io.connect("/");
 
-			socket.on('exception', function(exception){
+			socket.on('hello', function(exception){
+				$("h1").addClass('loaded');
+			});
+			socket.on('exception', function(exception) {
+				console.log(arguments);
 				var $exception = $('<div>'+exception.errorMessage+'</div>');
 				if (exception.who) {
 					$exception.append('<div>'+exception.who+'</div>');
