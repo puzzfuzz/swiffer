@@ -76,6 +76,9 @@ class Swiffer
 		#scoped app out for socket-io config, prolly not the best idea - CP
 		@app = express();
 
+		@app.get '/', (req, res) =>
+			res.redirect 302, '/swiffer/'
+
 		@app.use (req, res, next)=>
 			res.header "Access-Control-Allow-Origin", "*"
 			res.header "Access-Control-Allow-Headers", "X-Requested-With"
@@ -84,6 +87,7 @@ class Swiffer
 
 		@app.use bodyParser.json()
 		@app.use express.static(staticRoot)
+
 
 		@app.get '/swiffer/*', (req, res) =>
 			res.sendFile('index.html', {root:staticRoot})
