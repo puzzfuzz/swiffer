@@ -85,8 +85,7 @@ class Swiffer
 		@app.use bodyParser.json()
 		@app.use express.static(staticRoot)
 
-		@app.get '/', (req, res) =>
-			@prompt.log "handling default root..."
+		@app.get '/swiffer/*', (req, res) =>
 			res.sendFile('index.html', {root:staticRoot})
 
 #		@app.listen config.port, =>

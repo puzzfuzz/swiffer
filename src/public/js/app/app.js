@@ -14,7 +14,8 @@ define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'socket.io', '
 				_d.window.renderTo($("#mainCanvas").empty());
 
 				Backbone.history.start({
-					root: "/"
+					root: "/swiffer/",
+					pushState: true
 				});
 			});
 
@@ -25,17 +26,31 @@ define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'socket.io', '
 			});
 			socket.on('exception', function(exception) {
 				console.log(arguments);
-				var $exception = $('<div>'+exception.errorMessage+'</div>');
+				var panel = $('<div />', {
+						'class': 'panel panel-danger'
+					}),
+					body = $('<div />', {
+						'class': 'panel-body'
+					});
+				panel.append([
+					'<div class="panel-heading">',
+						'<h3 class="panel-title">',
+							exception.errorMessage,
+						'</h3>',
+					'</div>'
+				].join(''))
+				.append(body);
+
 				if (exception.who) {
-					$exception.append('<div>'+exception.who+'</div>');
+					body.append('<div>'+exception.who+'</div>');
 				}
-				if (exception.when) {
-					$exception.append('<div>'+moment(exception.when).format('M/D/YYYY HH:mm:ss.SSS')+'</div>');
+				if (exception.clientTime) {
+					body.append('<div>'+moment(exception.clientTime).format('M/D/YYYY HH:mm:ss.SSS')+'</div>');
 				}
 				if (exception.trace) {
-					$exception.append('<pre>'+ exception.trace +'</pre>');
+					body.append('<pre>'+ exception.trace +'</pre>');
 				}
-				$('.exceptions_wrap').prepend($exception);
+				$('.exceptions_wrap').prepend(panel);
 			});
 		}
 	});

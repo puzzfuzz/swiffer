@@ -10,7 +10,6 @@ class ExceptionHandler
 		@router.use bodyParser.json()
 
 		@router.post '/exception', @save, @send
-		@router.get '/exception', @get
 
 		# @swiffer.app.use @router
 
@@ -42,15 +41,6 @@ class ExceptionHandler
 
 		@events.emit 'io', data
 		@events.emit 'axon', data
-
-	get: (req, res)=>
-		@logger.log "Exception get!"
-		res.status(200).json({nothing: "indeed"})
-		# model.get (err, data)=>
-		# 	@logger.log "This is running, at least! and restarts"
-		# 	if (err)
-		# 		return res.json(503, { error: true })
-		# 	res.status(200).json(data)
 
 	unload: ->
 		@router.routes = {}

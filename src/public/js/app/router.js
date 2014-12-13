@@ -10,6 +10,8 @@ define([
 //			'/projects': 'showProjects',
 //			'/users': 'showUsers',
 //
+			'exception/:id': 'showException',
+
 			// Default
 			'*actions': 'defaultAction'
 		},
@@ -34,6 +36,10 @@ define([
 //				console.log('No route:', actions);
 //			});
 //			Backbone.history.start();
+		},
+
+		showException: function(id) {
+			console.log("Trying to show this exception", id);
 		},
 
 		defaultAction: function(actions) {
