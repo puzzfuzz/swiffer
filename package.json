@@ -22,8 +22,10 @@
     "body-parser": "^1.10.0",
     "cli-color": "^0.3.2",
     "coffee-script": "^1.8.0",
+    "dynamodb-doc": "git://github.com/awslabs/dynamodb-document-js-sdk",
     "express": "^4.0.0",
     "http": "0.0.0",
+    "q": "^1.1.2",
     "redis": "~0.12.1",
     "socket.io": "~1.2.1",
     "underscore": "~1.7.0"

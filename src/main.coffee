@@ -151,6 +151,7 @@ swiffer = new Swiffer()
 scope = 
 	swiffer: swiffer
 	prompt: swiffer.prompt
+	console: swiffer.prompt
 	require: require
 
 context = vm.createContext scope

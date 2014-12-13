@@ -5,7 +5,8 @@ class AbstractDatabase
 	put: (table, id, data)->
 		unimplemented()
 
-	get: unimplemented
+	get: (table, id)->
+		unimplemented()
 
 	close: ->
 		console.log("Nothing to close on database layer.")

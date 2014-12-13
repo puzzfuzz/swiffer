@@ -24,6 +24,11 @@ class ExceptionHandler
 
 	save: (req, res, next)=>
 		exception = _.clone(req.body)
+
+		@swiffer.db.put 'events', exception.clientTime, exception
+			.finally ->
+				console.log arguments
+
 		next()
 		# model.save exception, (err)=>
 		# 	if (err)
