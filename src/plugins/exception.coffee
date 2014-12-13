@@ -35,16 +35,13 @@ class ExceptionHandler
 		@logger.log req.body
 		exception = _.clone(req.body)
 		res.status(200).json({ error: null })
-		# @logger.log exception
-		@events.emit 'io', {
+		
+		data = 
 			name: 'exception'
 			data: exception
-		}
-		#TODO move io into socket / broadcast module
-		# model.send @swiffer.io, exception, (err)=>
-		# 	if (err)
-		# 		return res.json(503, { error: true })
-		# 	res.json(200, { error: null })
+
+		@events.emit 'io', data
+		@events.emit 'axon', data
 
 	get: (req, res)=>
 		@logger.log "Exception get!"

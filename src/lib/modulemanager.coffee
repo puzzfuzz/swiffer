@@ -22,6 +22,9 @@ class ModuleManager
 		@eventProxies[name].on 'io', (data)=>
 			@swiffer.io.sockets.emit data.name, data.data
 
+		@eventProxies[name].on 'axon', (data)=>
+			@swiffer.axonSocket.send data.name, data.data
+
 		return @eventProxies[name]
 
 	getDomain: (name)->
@@ -58,7 +61,6 @@ class ModuleManager
 				@logger.log "Setting up the router proxy"
 				router = express.Router()
 				router.use (req, res, next)=>
-						console.log("I am nexting!!!")
 						myDomain.exit()
 						@getDomain(name).run next
 					, @modules[name].router

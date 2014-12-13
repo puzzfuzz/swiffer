@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "aws-sdk": "^2.1.0",
-    "axon": "~2.0.1",
+    "axon": "^2.0.1",
     "body-parser": "^1.10.0",
     "cli-color": "^0.3.2",
     "coffee-script": "^1.8.0",

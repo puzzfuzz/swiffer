@@ -4,6 +4,7 @@ config = require '../config'
 ModuleManager = require './lib/modulemanager'
 bodyParser = require 'body-parser'
 vm = require 'vm'
+axon = require 'axon'
 
 staticRoot = __dirname + config.staticRoot
 
@@ -14,6 +15,10 @@ class Swiffer
 
 	init: ->
 		@setupExpress()
+		@setupSocket()
+		@setupDatabase()
+		@setupAxon()
+
 		@module = new ModuleManager @prompt, @
 
 		@module.loadModule module for module in config.modules
@@ -24,12 +29,17 @@ class Swiffer
 		@module = null
 		@app = null
 		@appServer.close()
+		@db?.close()
+		@db = null
+		@axonSocket.close()
+		@axonSocket = null
 
+		delete require.cache[require.resolve('./db/' + config.database)]
 		delete require.cache[require.resolve('../config')]
 		delete require.cache[require.resolve('./lib/modulemanager')]
 
-		ModuleManager = require './lib/modulemanager'
 		config = require '../config'
+		ModuleManager = require './lib/modulemanager'
 
 
 
@@ -85,18 +95,25 @@ class Swiffer
 		@appServer.listen config.port, =>
 			@prompt.setStatusLines [@prompt.clc.green "Listening on port #{config.port}"]
 
-		@setupSocket()
 
 	setupSocket: ->
 		@io = require('socket.io').listen(@appServer)
 
 		@io.sockets.on 'connection', (socket)=>
 			@module.proxyEvent 'connection', socket
-		# 	exception.get (err, data)=>
-		# 		if (err)
-		# 			return
-		# 		data.forEach (exception) =>
-		# 			socket.emit 'exception', exception
+
+	setupAxon: ->
+		@axonSocket = axon.socket 'pub'
+		@axonSocket.bind 10382
+
+	setupDatabase: ->
+		if !config.database
+			return
+
+		Database = require './db/' + config.database
+
+		if Database
+			@db = new Database @
 
 	parseCommand: (msg)->
 		index = msg.indexOf(" ")
