@@ -15,7 +15,11 @@ class ExceptionHandler
 
 
 		@events.on 'connection', (socket)=>
-			socket.emit 'hello', {from: 'exception', to:'yours truely'}
+			@swiffer.db.list 'events'
+				.then (data)=>
+					socket.emit 'exception', JSON.parse(exception) for own id, exception of data
+
+			# socket.emit 'hello', {from: 'exception', to:'yours truely'}
 			# model.get (err, data)=>
 			# 	if (err)
 			# 		return
@@ -29,6 +33,13 @@ class ExceptionHandler
 			.finally ->
 				console.log arguments
 
+		data = 
+			name: 'exception'
+			data: exception
+
+		@events.emit 'io', data
+		@events.emit 'axon', data
+
 		next()
 		# model.save exception, (err)=>
 		# 	if (err)
@@ -39,13 +50,6 @@ class ExceptionHandler
 		@logger.log req.body
 		exception = _.clone(req.body)
 		res.status(200).json({ error: null })
-		
-		data = 
-			name: 'exception'
-			data: exception
-
-		@events.emit 'io', data
-		@events.emit 'axon', data
 
 	unload: ->
 		@router.routes = {}

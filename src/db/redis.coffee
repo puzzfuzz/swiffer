@@ -12,15 +12,22 @@ class RedisDatabase extends AbstractDatabase
 
 	put: (table, id, data)->
 		deferr = Q.defer()
-		@client.hset id, table, JSON.stringify(data), @createCallback(deferr)
+		@client.hset table, id, JSON.stringify(data), @createCallback(deferr)
 
 		deferr.promise
 
 	get: (table, id)->
 		deferr = Q.defer()
-		@client.hget id, table, @createCallback(deferr)
+		@client.hget table, id, @createCallback(deferr)
 
 		deferr.promise
+
+	list: (table)->
+		deferr = Q.defer()
+		@client.hgetall table, @createCallback(deferr)
+
+		deferr.promise
+
 
 	close: ->
 		@client.quit()

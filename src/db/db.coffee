@@ -9,8 +9,12 @@ class AbstractDatabase
 	get: (table, id)->
 		unimplemented()
 
+	list: (table)->
+		unimplemented()
+
 	close: ->
 		console.log("Nothing to close on database layer.")
+
 
 	# utility
 	createCallback: (deferr)->
