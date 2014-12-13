@@ -2,10 +2,11 @@ AbstractDatabase = require './db'
 AWS = require 'aws-sdk'
 DOC = require 'dynamodb-doc'
 Q = require 'q'
+config = require '../../config'
 
 # http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
 
-AWS.config.update({region: 'us-east-1'});
+AWS.config.update({region: config.region});
 
 class DynamoDB extends AbstractDatabase
 	constructor: ->
