@@ -7,5 +7,7 @@
 	"restartTime": 5,
 	"modules": [
 		"exception"
-	]
+	],
+
+	"database": "redis"
 }
