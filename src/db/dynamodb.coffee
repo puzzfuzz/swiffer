@@ -18,6 +18,7 @@ class DynamoDB extends AbstractDatabase
 		@dynamo.waitFor 'tableNotExists', { TableName: 'events' }, @createEventTable
 
 	createEventTable: =>
+		console.log 'Trying to create a table!'
 		@dynamo.createTable {
 			TableName: 'events'
 			AttributeDefinitions: [{
@@ -51,17 +52,18 @@ class DynamoDB extends AbstractDatabase
 			Item: data
 		}, @createCallback deferr
 
-		return deferr.promise
+		deferr.promise
 
 	get: (table, id)->
+		deferr = Q.defer()
 
+		@client.getItem {
+			TableName: table
+			Key: 
+				id: id
+		}, @createCallback deferr
 
-	createCallback: (deferr)->
-		return (err, data)->
-			if err
-				deferr.reject err
-			else
-				deferr.resolve data
+		deferr.promise
 
 
 module.exports = DynamoDB
