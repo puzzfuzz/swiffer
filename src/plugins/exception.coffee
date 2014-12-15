@@ -26,6 +26,11 @@ class ExceptionHandler
 						.each (value, i)=>
 							socket.emit 'exception', value
 
+		@events.on 'socket:getException', (socket, id)=>
+			@swiffer.db.get 'events', id
+				.then (value)->
+					socket.emit 'exception', value
+
 	save: (req, res, next)=>
 		exception = _.clone(req.body)
 

@@ -19,13 +19,9 @@ define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'socket.io', '
 				});
 			});
 
-			var socket = io.connect("/");
+			_d.socket = io.connect("/");
 
-			socket.emit('api', 'listExceptions', 1234);
-			socket.on('hello', function(exception){
-				$("h1").addClass('loaded');
-			});
-			socket.on('exception', function(exception) {
+			_d.socket.on('exception', function(exception) {
 				console.log(arguments);
 				var panel = $('<div />', {
 						'class': 'panel panel-danger'
@@ -53,6 +49,9 @@ define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'socket.io', '
 				}
 				$('.exceptions_wrap').prepend(panel);
 			});
+		},
+		API: function(method, args) {
+			_d.socket.emit('api', method, args);
 		}
 	});
 

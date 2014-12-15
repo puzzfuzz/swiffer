@@ -40,10 +40,15 @@ define([
 
 		showException: function(id) {
 			console.log("Trying to show this exception", id);
+
+			$(".exceptions_wrap").empty();
+			App.API('getException', id);
 		},
 
 		defaultAction: function(actions) {
 			console.log('No route:', actions);
+			$(".exceptions_wrap").empty();
+			App.API('listExceptions');
 		}
 	});
 

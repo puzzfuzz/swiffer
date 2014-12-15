@@ -8,9 +8,9 @@ class ModuleManager
 		@eventProxies = {}
 		@domains = {}
 
-	proxyEvent: (event, data)->
+	proxyEvent: ()->
 		for name, emitter of @eventProxies
-			emitter.emit event, data
+			emitter.emit.apply emitter, arguments
 
 	getEventProxy: (name)->
 		if (@eventProxies[name])
