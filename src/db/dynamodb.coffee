@@ -6,10 +6,17 @@ config = require '../../config'
 _ = require 'underscore'
 
 # http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
+#
+# 
+#
+#
+#
+#
 
 AWS.config.update({region: config.region});
 
 class DynamoDB extends AbstractDatabase
+	_generatingTables: {}
 	constructor: ->
 		console.log "Hey look, dynamo did its init thing..."
 
@@ -60,26 +67,66 @@ class DynamoDB extends AbstractDatabase
 		}, ->
 			console.log 'Table create!'
 			console.log arguments
+
+	checkTable: (table)->
+		deferr = Q.defer()
+		@dynamo.waitFor 'tableExists', { TableName: 'swiffer_#{table}' }, =>
+			@_generatingTables[table] = false
+			deferr.resolve()
+		@dynamo.waitFor 'tableNotExists', { TableName: 'swiffer_#{table}' }, =>
+			deferr.reject()
+
+		deferr.promise
+
+	generateTable: (table)->
+		if @_generatingTables[table]
+			return
+
+		@_generatingTables[table] = true
+		try
+			schema = require "../schema/#{table}"
+		catch e
+			schema = 
+				AttributeDefinitions: [{
+					AttributeName: 'id'
+					AttributeType: 'S'
+				}]
+				KeySchema: [{
+					AttributeName: 'id'
+					KeyType: 'HASH'
+				}]
+				ProvisionedThroughput:
+					ReadCapacityUnits: 5
+					WriteCapacityUnits: 5
+		
+		schema.TableName = "swiffer_#{table}"
+
+		@dynamo.createTable schema, ->
+			console.log "Table has been created!"
+		
+
 	put: (table, id, data)=>
 		deferr = Q.defer()
 
-		data.id = ""+id
+		@checkTable(table).then =>
+			data.id = ""+id
 
-		@client.putItem {
-			TableName: "swiffer_#{table}"
-			Item: data
-		}, @createCallback deferr
+			@client.putItem {
+				TableName: "swiffer_#{table}"
+				Item: data
+			}, @createCallback deferr
 
 		deferr.promise
 
 	get: (table, id)->
 		deferr = Q.defer()
 
-		@client.getItem {
-			TableName: "swiffer_#{table}"
-			Key: 
-				id: ""+id
-		}, @createCallback deferr
+		@checkTable(table).then =>
+			@client.getItem {
+				TableName: "swiffer_#{table}"
+				Key: 
+					id: ""+id
+			}, @createCallback deferr
 
 		deferr.promise
 
