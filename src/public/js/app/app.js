@@ -21,6 +21,7 @@ define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'socket.io', '
 
 			var socket = io.connect("/");
 
+			socket.emit('api', 'listExceptions', 1234);
 			socket.on('hello', function(exception){
 				$("h1").addClass('loaded');
 			});

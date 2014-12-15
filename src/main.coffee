@@ -99,11 +99,14 @@ class Swiffer
 			@prompt.setStatusLines [@prompt.clc.green "Listening on port #{config.port}"]
 
 
-	setupSocket: ->
+	setupSocket: =>
 		@io = require('socket.io').listen(@appServer)
 
 		@io.sockets.on 'connection', (socket)=>
 			@module.proxyEvent 'connection', socket
+			socket.on 'api', (method, data)=>
+				@module.proxyEvent "socket:#{method}", socket, data
+				
 
 	setupAxon: ->
 		@axonSocket = axon.socket 'pub'

@@ -14,8 +14,8 @@ class ExceptionHandler
 		# @swiffer.app.use @router
 
 
-		# @events.on 'socket:listExceptions', (socket)=>
-		@events.on 'connection', (socket)=>
+		@events.on 'socket:listExceptions', (socket)=>
+		# @events.on 'connection', (socket)=>
 			# @swiffer.db.list 'events'
 			@swiffer.db.listWhere 'events', { name: 'exception' }
 				.catch @logger.log
