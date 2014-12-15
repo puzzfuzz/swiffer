@@ -43,7 +43,7 @@ class ExceptionHandler
 			data: exception
 
 		@events.emit 'io', data
-		# @events.emit 'axon', data
+		@events.emit 'axon', data
 
 		next()
 
