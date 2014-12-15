@@ -4,6 +4,7 @@
 	 */
 
 	var default_options = {
+		onerror: true,		//Automatically bind onerror handler
 		apiRoot : null,     //REQUIRED - route to the Swiffer API server
 		apiKey : null,      //REQUIRED - local API key for connecting to the Swiffer API server
 		user: null,         //user ID to associate all events from this session with
@@ -124,6 +125,17 @@
 			Swiffer.options = extend(default_options, options);
 			Swiffer.initialized = true;
 
+			if (Swiffer.options.onerror) {
+				(function(_onerror) {
+					window.onerror = function(){
+						if (_onerror) { _onerror.apply(this, arguments); }
+						Swiffer.onError.apply(this, arguments);
+					};
+				}(window.onerror));
+
+				// don't pass it on...
+				delete Swiffer.options.onerror;
+			}
 
 			if (this.options.useSocket) {
 				//TODO

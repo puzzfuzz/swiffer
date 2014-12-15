@@ -12,6 +12,9 @@ class AbstractDatabase
 	list: (table)->
 		unimplemented()
 
+	listWhere: (table, match)->
+		unimplemented()
+
 	close: ->
 		console.log("Nothing to close on database layer.")
 

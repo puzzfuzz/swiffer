@@ -3,6 +3,7 @@ AWS = require 'aws-sdk'
 DOC = require 'dynamodb-doc'
 Q = require 'q'
 config = require '../../config'
+_ = require 'underscore'
 
 # http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
 
@@ -15,29 +16,46 @@ class DynamoDB extends AbstractDatabase
 		@dynamo = new AWS.DynamoDB()
 		@client = new DOC.DynamoDB(@dynamo)
 
-		@dynamo.waitFor 'tableNotExists', { TableName: 'events' }, @createEventTable
+
+	buildTables: =>
+		# delete it if it exists
+		@dynamo.deleteTable { TableName: 'swiffer_events' }
+		# once gone, recreate
+		@dynamo.waitFor 'tableNotExists', { TableName: 'swiffer_events' }, @createEventTable
 
 	createEventTable: =>
 		console.log 'Trying to create a table!'
 		@dynamo.createTable {
-			TableName: 'events'
+			TableName: 'swiffer_events'
 			AttributeDefinitions: [{
-				AttributeName: 'id',
+				AttributeName: 'id'
 				AttributeType: 'S'
 			}, {
-				AttributeName: 'name',
+				AttributeName: 'name'
 				AttributeType: 'S'
-			}, {
-				AttributeName: 'data',
-				AttributeType: 'M'
 			}]
 			KeySchema: [{
-				AttributeName: 'id',
+				AttributeName: 'id'
 				KeyType: 'HASH'
 			}]
+			GlobalSecondaryIndexes: [{
+				IndexName: 'name-range'
+				KeySchema: [{
+					AttributeName: 'name'
+					KeyType: 'HASH'
+				}]
+				Projection: {
+					ProjectionType: 'KEYS_ONLY'
+				}
+				ProvisionedThroughput: {
+					ReadCapacityUnits: 5
+					WriteCapacityUnits: 5
+				}
+
+			}]
 			ProvisionedThroughput: {
-				ReadCapacityUnits: 0
-				WriteCapacityUnits: 0
+				ReadCapacityUnits: 5
+				WriteCapacityUnits: 5
 			}
 		}, ->
 			console.log 'Table create!'
@@ -45,10 +63,10 @@ class DynamoDB extends AbstractDatabase
 	put: (table, id, data)=>
 		deferr = Q.defer()
 
-		data.id = id if not data.id
+		data.id = ""+id
 
 		@client.putItem {
-			TableName: table
+			TableName: "swiffer_#{table}"
 			Item: data
 		}, @createCallback deferr
 
@@ -58,12 +76,44 @@ class DynamoDB extends AbstractDatabase
 		deferr = Q.defer()
 
 		@client.getItem {
-			TableName: table
+			TableName: "swiffer_#{table}"
 			Key: 
-				id: id
+				id: ""+id
 		}, @createCallback deferr
 
 		deferr.promise
 
+	list: (table)->
+		deferr = Q.defer()
+
+		@client.scan {
+			TableName: "swiffer_#{table}"
+		}, @createCallback deferr
+
+		deferr.promise
+
+	listWhere: (table, match)->
+		deferr = Q.defer()
+
+		@list table
+			.catch deferr.reject
+			.then (arr)=>
+				arr = _(arr).where match
+				deferr.resolve arr
+
+		deferr.promise
+
+
+	# utility
+	createCallback: (deferr)->
+		return (err, data)->
+			if err
+				deferr.reject err
+			else
+				if data.Item
+					data = data.Item
+				if data.Items
+					data = data.Items
+				deferr.resolve data
 
 module.exports = DynamoDB
