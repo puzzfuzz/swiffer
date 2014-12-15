@@ -104,8 +104,14 @@ class Swiffer
 
 		@io.sockets.on 'connection', (socket)=>
 			@module.proxyEvent 'connection', socket
-			socket.on 'api', (method, data)=>
-				@module.proxyEvent "socket:#{method}", socket, data
+			socket.on 'api', (method, data, id)=>
+				reply = 
+					reply: (data)->
+						socket.emit 'apiResult', id, data
+					error: (data)->
+						socket.emit 'apiFailure', id, data
+
+				@module.proxyEvent "socket:#{method}", reply, data, id
 				
 
 	setupAxon: ->
@@ -156,5 +162,6 @@ scope =
 	prompt: swiffer.prompt
 	console: swiffer.prompt
 	require: require
+	_: require 'underscore'
 
 context = vm.createContext scope

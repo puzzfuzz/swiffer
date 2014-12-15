@@ -7,7 +7,7 @@ requirejs.config({
 	urlArgs: '_=' + (new Date()).getTime(),
 	"paths": {
 		"app":          "app",
-		"jquery":       "//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min",
+		"jquery":       "../lib/jquery.min",
 		"socket.io":    "/socket.io/socket.io",
 		"backbone":     "../lib/backbone-min",
 		"underscore":   "../lib/underscore-min",
@@ -15,6 +15,11 @@ requirejs.config({
 		"coreapp":      "core/coreapp",
 		"lib":          "core/lib",
 		"router":       "router"
+	},
+	shim: {
+		jquery: {
+			exports: 'jQuery'
+		}
 	}
 });
 

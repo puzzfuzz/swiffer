@@ -1,10 +1,12 @@
 
-define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'socket.io', 'moment'
-], function($, _, Backbone, App, Router, io, moment){
+define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'moment',
+	'core/socket'
+], function($, _, Backbone, App, Router, moment){
 	var _d = {};
 
 	$.extend(App, {
 		initialize : function(){
+			App.Socket.init();
 			// Pass in our Router module and call it's initialize function
 			require(['router', 'window'], function() {
 				_d.router = App.router = new App.Router();
@@ -18,40 +20,6 @@ define([ 'jquery', 'underscore', 'backbone', 'coreapp', 'router', 'socket.io', '
 					pushState: true
 				});
 			});
-
-			_d.socket = io.connect("/");
-
-			_d.socket.on('exception', function(exception) {
-				console.log(arguments);
-				var panel = $('<div />', {
-						'class': 'panel panel-danger'
-					}),
-					body = $('<div />', {
-						'class': 'panel-body'
-					});
-				panel.append([
-					'<div class="panel-heading">',
-						'<h3 class="panel-title">',
-							exception.errorMessage,
-						'</h3>',
-					'</div>'
-				].join(''))
-				.append(body);
-
-				if (exception.who) {
-					body.append('<div>'+exception.who+'</div>');
-				}
-				if (exception.clientTime) {
-					body.append('<div>'+moment(exception.clientTime).format('M/D/YYYY HH:mm:ss.SSS')+'</div>');
-				}
-				if (exception.trace) {
-					body.append('<pre>'+ exception.trace +'</pre>');
-				}
-				$('.exceptions_wrap').prepend(panel);
-			});
-		},
-		API: function(method, args) {
-			_d.socket.emit('api', method, args);
 		}
 	});
 

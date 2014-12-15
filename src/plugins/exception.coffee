@@ -15,21 +15,18 @@ class ExceptionHandler
 
 
 		@events.on 'socket:listExceptions', (socket)=>
-		# @events.on 'connection', (socket)=>
-			# @swiffer.db.list 'events'
 			@swiffer.db.listWhere 'events', { name: 'exception' }
-				.catch @logger.log
-				.then (data)=>
-					_(data).chain()
-						.sortBy (value, i)=>
-							i
-						.each (value, i)=>
-							socket.emit 'exception', value
+				.catch (err)->
+					socket.error err
+				.then (data)->
+					socket.reply _(data).sortBy (value, i)=> i
 
 		@events.on 'socket:getException', (socket, id)=>
 			@swiffer.db.get 'events', id
+				.catch (err)->
+					socket.error err
 				.then (value)->
-					socket.emit 'exception', value
+					socket.reply value
 
 	save: (req, res, next)=>
 		exception = _.clone(req.body)

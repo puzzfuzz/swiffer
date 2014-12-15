@@ -139,18 +139,6 @@ class DynamoDB extends AbstractDatabase
 
 		deferr.promise
 
-	listWhere: (table, match)->
-		deferr = Q.defer()
-
-		@list table
-			.catch deferr.reject
-			.then (arr)=>
-				arr = _(arr).where match
-				deferr.resolve arr
-
-		deferr.promise
-
-
 	# utility
 	createCallback: (deferr)->
 		return (err, data)->

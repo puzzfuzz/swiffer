@@ -1,7 +1,7 @@
 redis = require 'redis'
 AbstractDatabase = require './db'
 Q = require 'q'
-
+_ = require 'underscore'
 
 # client = redis.createClient()
 # client.quit()
@@ -18,13 +18,15 @@ class RedisDatabase extends AbstractDatabase
 
 	get: (table, id)->
 		deferr = Q.defer()
-		@client.hget table, id, @createCallback(deferr)
+		@client.hget table, id, @createCallback(deferr, JSON.parse)
 
 		deferr.promise
 
 	list: (table)->
 		deferr = Q.defer()
-		@client.hgetall table, @createCallback(deferr)
+		@client.hgetall table, @createCallback(deferr, (data)->
+			_(data).map (d)-> JSON.parse d
+			)
 
 		deferr.promise
 

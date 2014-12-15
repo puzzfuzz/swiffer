@@ -1,4 +1,5 @@
 Q = require 'q'
+_ = require 'underscore'
 
 unimplemented = -> "Cannot call pure virtual method"
 
@@ -13,18 +14,29 @@ class AbstractDatabase
 		unimplemented()
 
 	listWhere: (table, match)->
-		unimplemented()
+		deferr = Q.defer()
+
+		@list table
+			.catch (err)->
+				deferr.reject err
+			.then (arr)->
+				arr = _(arr).where(match)
+				deferr.resolve arr
+					
+
+		deferr.promise
 
 	close: ->
 		console.log("Nothing to close on database layer.")
 
 
 	# utility
-	createCallback: (deferr)->
+	createCallback: (deferr, parse)->
 		return (err, data)->
 			if err
 				deferr.reject err
 			else
+				data = parse data if parse
 				deferr.resolve data
 
 
