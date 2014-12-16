@@ -33,5 +33,7 @@ class RouterHandler
 		@events.emit 'io', data
 		@events.emit 'axon', data
 
+		res.status(200).json({ error: null })
+
 
 module.exports = RouterHandler

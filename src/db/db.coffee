@@ -54,7 +54,11 @@ class AbstractDatabase
 			if err
 				deferr.reject err
 			else
-				data = parse data if parse
+				if parse
+					try
+						data = parse data 
+					catch
+						console.log data
 				deferr.resolve data
 
 

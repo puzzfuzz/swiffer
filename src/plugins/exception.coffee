@@ -12,14 +12,14 @@ class ExceptionHandler
 		# @swiffer.app.use @router
 
 		@events.on 'socket:listExceptions', (socket)=>
-			@swiffer.db.listWhere 'events', { name: 'exception' }
+			@swiffer.db.list 'exceptions'
 				.catch (err)->
 					socket.error err
 				.then (data)->
 					socket.reply _(data).sortBy (value, i)=> i
 
 		@events.on 'socket:getException', (socket, id)=>
-			@swiffer.db.get 'events', id
+			@swiffer.db.get 'exceptions', id
 				.catch (err)->
 					socket.error err
 				.then (value)->
@@ -30,7 +30,7 @@ class ExceptionHandler
 
 		exception.name = 'exception'
 
-		@swiffer.db.put 'events', exception.clientTime, exception
+		@swiffer.db.put 'exceptions', exception.clientTime, exception
 
 		data = 
 			name: 'exception'

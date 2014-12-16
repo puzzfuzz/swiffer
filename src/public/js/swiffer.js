@@ -87,7 +87,7 @@
 			delete rpcgw.options.apiKey;
 
 			setInterval(function() {
-				rpcgw.post('/poll');
+				rpcgw.post('poll');
 			}, 10000)
 
 			return this;
@@ -125,7 +125,11 @@
 		initialized: false,
 		init: function(options){
 			var initProgress = $.Deferred();
+
 			requireProperties(options, ['apiRoot', 'apiKey']);
+
+			options.apiRoot = options.apiRoot.replace(/\/*$/, '/');
+
 			Swiffer.options = extend(default_options, options);
 			Swiffer.initialized = true;
 
@@ -144,7 +148,6 @@
 			if (this.options.useSocket) {
 				//TODO
 				//connect socket
-				//http://cdn.socket.io/socket.io-1.2.1.js
 				//resolve promise once socket is connected
 			} else {
 				rpcgw.init(Swiffer.options);
@@ -155,7 +158,7 @@
 		},
 
 		exception: function(exception){
-			return Swiffer.send('/exception/', exception);
+			return Swiffer.send('exception', exception);
 		},
 
 		send: function(api, data) {
@@ -163,7 +166,7 @@
 		},
 
 		event: function(eventName, eventData) {
-			return rpcgw.post('/event/', {
+			return rpcgw.post('event', {
 				eventName: eventName,
 				eventData: eventData
 			})
