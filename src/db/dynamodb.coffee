@@ -7,11 +7,6 @@ _ = require 'underscore'
 
 # http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB.html
 #
-# 
-#
-#
-#
-#
 
 AWS.config.update({region: config.region});
 

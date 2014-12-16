@@ -26,6 +26,24 @@ class AbstractDatabase
 
 		deferr.promise
 
+	pushList: (table, value)->
+		unimplemented()
+
+	popList: (table)->
+		unimplemented()
+
+	unshiftList: (table, value)->
+		unimplemented()
+
+	shiftList: (table)->
+		unimplemented()
+
+	getList: (table)->
+		unimplemented()
+
+	setList: (table, list)->
+		unimplemented()
+
 	close: ->
 		console.log("Nothing to close on database layer.")
 

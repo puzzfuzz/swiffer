@@ -16,13 +16,17 @@ class ModuleManager
 		if (@eventProxies[name])
 			return @eventProxies[name]
 
+		myDomain = @getDomain(name)
+
 		@eventProxies[name] = new EventEmitter()
-		@getDomain(name).add @eventProxies[name]
+		myDomain.add @eventProxies[name]
 
 		@eventProxies[name].on 'io', (data)=>
+			myDomain.exit()
 			@swiffer.io.sockets.emit data.name, data.data
 
 		@eventProxies[name].on 'axon', (data)=>
+			myDomain.exit()
 			@swiffer.axonSocket.send data.name, data.data
 
 		return @eventProxies[name]
@@ -51,6 +55,7 @@ class ModuleManager
 	loadModule: (name)->
 		@unloadModule name
 		myDomain = @getDomain name
+		myDomain.exit()
 		myDomain.run =>
 			@logger.log @logger.clc.cyan "About to load #{name}"
 			Module = require("../plugins/#{name}")

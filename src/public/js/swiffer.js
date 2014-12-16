@@ -86,6 +86,10 @@
 			delete rpcgw.options.apiRoot;
 			delete rpcgw.options.apiKey;
 
+			setInterval(function() {
+				rpcgw.post('/poll');
+			}, 10000)
+
 			return this;
 		},
 		post: function(path, data) {
@@ -151,7 +155,11 @@
 		},
 
 		exception: function(exception){
-			return rpcgw.post('/exception/', exception);
+			return Swiffer.send('/exception/', exception);
+		},
+
+		send: function(api, data) {
+			return rpcgw.post(api, data);
 		},
 
 		event: function(eventName, eventData) {

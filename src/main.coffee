@@ -2,6 +2,7 @@ Prompt = require './lib/prompt'
 express = require 'express'
 config = require '../config'
 ModuleManager = require './lib/modulemanager'
+SessionManager = require './lib/sessionmanager'
 bodyParser = require 'body-parser'
 vm = require 'vm'
 axon = require 'axon'
@@ -20,6 +21,7 @@ class Swiffer
 		@setupAxon()
 
 		@module = new ModuleManager @prompt, @
+		@sessionManager = new SessionManager @prompt, @
 
 		@module.loadModule module for module in config.modules
 
@@ -27,6 +29,7 @@ class Swiffer
 		@module.unloadModule module for own module of @module.modules
 
 		@module = null
+		@sessionManager = null
 		@app = null
 		@appServer.close()
 		@db?.close()
@@ -37,11 +40,11 @@ class Swiffer
 		delete require.cache[require.resolve('./db/' + config.database)]
 		delete require.cache[require.resolve('../config')]
 		delete require.cache[require.resolve('./lib/modulemanager')]
+		delete require.cache[require.resolve('./lib/sessionmanager')]
 
 		config = require '../config'
 		ModuleManager = require './lib/modulemanager'
-
-
+		SessionManager = require './lib/sessionmanager'
 
 		timeleft = config.restartTime || 5
 		restartWaiter = ()=>
@@ -77,7 +80,7 @@ class Swiffer
 		@app = express();
 
 		@app.get '/', (req, res) =>
-			res.redirect 302, '/swiffer/'
+			res.redirect '/swiffer/'
 
 		@app.use (req, res, next)=>
 			res.header "Access-Control-Allow-Origin", "*"
@@ -88,6 +91,12 @@ class Swiffer
 		@app.use bodyParser.json()
 		@app.use express.static(staticRoot)
 
+		@app.post '*', (req, res, next)=>
+			@sessionManager.poll req.body.session
+			next()
+
+		@app.post '/poll', (req, res)=>
+			res.status(200).json({ error: null })
 
 		@app.get '/swiffer/*', (req, res) =>
 			res.sendFile('index.html', {root:staticRoot})

@@ -7,12 +7,9 @@ class ExceptionHandler
 		@logger.log "Exception handler constructor is running!!"
 		@router = express.Router()
 
-		@router.use bodyParser.json()
-
 		@router.post '/exception', @save, @send
 
 		# @swiffer.app.use @router
-
 
 		@events.on 'socket:listExceptions', (socket)=>
 			@swiffer.db.listWhere 'events', { name: 'exception' }
