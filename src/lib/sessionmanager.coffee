@@ -12,6 +12,11 @@ class SessionManager extends EventEmitter
 		@swiffer.db.get 'sessions', sessID
 			.then (data)=>
 				@logger.log 'Resuming stored session', sessID, data
+				
+				# add the reconnect event
+				data.reconnect = [] if !data.reconnect
+				data.reconnect.push [ data.lastSeen, +new Date() ]
+
 				@sessions[sessID] = data
 			.finally =>
 				if !@sessions[sessID]
@@ -20,9 +25,6 @@ class SessionManager extends EventEmitter
 					@sessions[sessID] =
 						id: sessID
 						startTime: +new Date()
-
-					# Before poll, important because we don't want to send timerID
-					@swiffer.db.put 'sessions', sessID, @sessions[sessID]
 
 				@emit 'start', sessID
 				@poll sessID
@@ -48,7 +50,7 @@ class SessionManager extends EventEmitter
 				@swiffer.db.put 'sessions', sessID, sess
 
 
-		@swiffer.db.put 'sessions', sessID, @sessions[sessID]
+		storeSession sessID
 		@emit 'end', sessID
 
 		
@@ -59,6 +61,17 @@ class SessionManager extends EventEmitter
 
 		clearTimeout @sessions[sessID].timerID
 		@sessions[sessID].timerID = setTimeout (=> @endSession(sessID)), 15000
+		@sessions[sessID].lastSeen = +new Date()
+
+		@storeSession sessID
+
+	storeSession: (sessID, data)=>
+		data = @sessions[sessID] if !data
+		data = _.clone data
+
+		delete data.timerID
+
+		@swiffer.db.put 'sessions', sessID, data
 
 
 module.exports = SessionManager

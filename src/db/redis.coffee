@@ -12,7 +12,6 @@ class RedisDatabase extends AbstractDatabase
 
 	put: (table, id, data)->
 		deferr = Q.defer()
-		console.log data
 		@client.hset table, id, JSON.stringify(data), @createCallback(deferr)
 
 		deferr.promise
