@@ -1,17 +1,21 @@
 require('./plugins');
 var Backbone = require('backbone');
-var Marionette = require('backbone.marionette')
+var Marionette = require('backbone.marionette');
+
+
 
 // start the marionette inspector
 if (window.__agent) {
   window.__agent.start(Backbone, Marionette);
 }
 
-require('src/common/sync');
-
 var Application = require('src/application/application');
 
 var app = new Application();
+
+window.io.connect();
+console.log(app.socket);
+
 
 app.module('modal', {
   moduleClass: require('src/modal/module'),
@@ -41,6 +45,11 @@ app.module('colors', {
 app.module('books', {
   moduleClass: require('src/books/module'),
   container: app.layout.content
+});
+
+app.module('exceptions', {
+	moduleClass: require('src/exceptions/module'),
+	container: app.layout.content
 });
 
 Backbone.history.start();

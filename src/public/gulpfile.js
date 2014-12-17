@@ -27,13 +27,19 @@ gulp.task('html', function() {
     .pipe(gulp.dest('./dist'));
 });
 
+gulp.task('client', function() {
+	return gulp.src('./src/swiffer.js')
+		.pipe($.plumber())
+		.pipe(gulp.dest('./dist'));
+});
+
 gulp.task('styles', function() {
   return gulp.src('./src/main.less')
     .pipe($.less())
     .pipe($.autoprefixer())
     .pipe($.rename('bundle.css'))
     .pipe(gulp.dest('./dist'))
-    .pipe(reload({ stream: true }));
+//    .pipe(reload({ stream: true }));
 });
 
 var bundler;
@@ -58,7 +64,7 @@ function bundle() {
     .pipe($.sourcemaps.init({ loadMaps: true }))
     .pipe($.sourcemaps.write('./'))
     .pipe(gulp.dest('./dist'))
-    .pipe(reload({ stream: true }));
+//    .pipe(reload({ stream: true }));
 }
 
 gulp.task('scripts', function() {
@@ -94,6 +100,7 @@ gulp.task('mocha', ['jshint', 'symlink'], function() {
 gulp.task('build', [
   'clean',
   'html',
+  'client',
   'styles',
   'scripts',
   'test'
