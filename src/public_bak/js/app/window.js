@@ -1,4 +1,4 @@
-define(['jquery', 'underscore', 'backbone', 'coreapp'
+define(['../../.', 'underscore', 'backbone', 'coreapp'
 ], function($, _, Backbone, App){
 
 	App.Views.Window =  Backbone.View.extend({

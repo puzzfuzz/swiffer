@@ -1,4 +1,4 @@
-define(['jquery', 'underscore',
+define(['../../../.', 'underscore',
 	'socket.io'
 ], function($, _, io) {
 var _d = {
