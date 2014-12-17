@@ -11,9 +11,13 @@ if (window.__agent) {
 
 var Application = require('src/application/application');
 
-var app = new Application();
+window.app = new Application();
+app.Backbone = Backbone;
 
-window.io.connect();
+window.app.addInitializer(function(){
+
+});
+
 console.log(app.socket);
 
 

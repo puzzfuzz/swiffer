@@ -92,11 +92,6 @@
       "depends": [
         "jquery:jQuery"
       ]
-    },
-    "backbone.iobind": {
-      "depends": [
-        "socket.io"
-      ]
     }
   },
   "browserify-swap": {

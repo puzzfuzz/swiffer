@@ -92,6 +92,7 @@ class Swiffer
 		@app.use bodyParser.json()
 		@app.use express.static(staticRoot)
 
+
 		@app.post '*', (req, res, next)=>
 			@sessionManager.poll req.body.session
 			next()
