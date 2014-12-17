@@ -69,7 +69,7 @@ class SessionManager extends EventEmitter
 		data = @sessions[sessID] if !data
 		data = _.clone data
 
-		delete data.timerID
+		delete data.timerID if data
 
 		@swiffer.db.put 'sessions', sessID, data
 
