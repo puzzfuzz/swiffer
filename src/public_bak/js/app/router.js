@@ -72,13 +72,13 @@ var Router = Backbone.Router.extend({
 		console.log("Trying to show this exception", id);
 
 		$(".exceptions_wrap").empty();
-		App.API('getException', id).done(drawException);
+		App.API('exception:read', {id: id}).done(drawException);
 	},
 
 	defaultAction: function(actions) {
 		console.log('No route:', actions);
 		$(".exceptions_wrap").empty();
-		App.API('listExceptions').done(function(list) {
+		App.API('exception:read').done(function(list) {
 			_(list).each(drawException);
 		});
 	}

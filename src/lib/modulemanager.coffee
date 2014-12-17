@@ -1,6 +1,7 @@
 EventEmitter = require('events').EventEmitter
 domain = require 'domain'
 express = require 'express'
+_ = require 'underscore'
 
 class ModuleManager
 	constructor: (@logger, @swiffer)->
@@ -52,6 +53,22 @@ class ModuleManager
 		delete @domains[name]
 		delete @modules[name]
 
+	addClient: (socket)=>
+		console.log "Creating a new client for the modules"
+		@proxyEvent 'connection', socket
+		_(@modules).each (module, moduleName)=>
+			if module.api
+				myDomain = @getDomain moduleName
+				_(module.api).each (method, api)->
+					if typeof method == 'string'
+						method = module[method]
+					console.log "Binding #{api} to #{moduleName}"
+					socket.on api, ->
+						console.log 'Invoking this method!', arguments
+						myDomain.exit()
+						myDomain.run ->
+							method.apply module, arguments
+
 	loadModule: (name)->
 		@unloadModule name
 		myDomain = @getDomain name
@@ -59,20 +76,31 @@ class ModuleManager
 		myDomain.run =>
 			@logger.log @logger.clc.cyan "About to load #{name}"
 			Module = require("../plugins/#{name}")
-			@modules[name] = new Module @logger, @swiffer, @getEventProxy(name)
+			module = @modules[name] = new Module @logger, @swiffer, @getEventProxy(name)
 
 
-			if @modules[name].router
+			if module.api
+				_(module.api).each (method, api)=>
+					if typeof method == 'string'
+						method = module[method]
+
+					_(@swiffer.io.of('/').connected).each (client)->
+						client.on api, ->
+							myDomain.exit()
+							myDomain.run ->
+								method.apply module, arguments
+
+			if module.router
 				@logger.log "Setting up the router proxy"
 				router = express.Router()
 				router.use (req, res, next)=>
 						myDomain.exit()
 						@getDomain(name).run next
-					, @modules[name].router
+					, module.router
 
-				# router.use @modules[name].router
+				# router.use module.router
 				@swiffer.app.use router
-				@modules[name]._router_ref = router
+				module._router_ref = router
 
 	unloadModule: (name)->
 		if !@modules[name]

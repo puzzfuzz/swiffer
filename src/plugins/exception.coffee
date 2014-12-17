@@ -3,27 +3,29 @@ express = require 'express'
 bodyParser = require 'body-parser'
 
 class ExceptionHandler
+	api: {
+		'exception:read': 'getException'
+	}
+
 	constructor: (@logger, @swiffer, @events)->
 		@logger.log "Exception handler constructor is running!!"
 		@router = express.Router()
 
 		@router.post '/exception', @save, @send
 
-		# @swiffer.app.use @router
-
-		@events.on 'socket:listExceptions', (socket)=>
-			@swiffer.db.list 'exceptions'
-				.catch (err)->
-					socket.error err
-				.then (data)->
-					socket.reply _(data).sortBy (value, i)=> i
-
-		@events.on 'socket:getException', (socket, id)=>
+	getException: (data, callback)=>
+		if data?.id # if there's an ID then we fetch
 			@swiffer.db.get 'exceptions', id
 				.catch (err)->
 					socket.error err
 				.then (value)->
-					socket.reply value
+					socket.reply null, value
+		else # otherwise we just read
+			@swiffer.db.list 'exceptions'
+				.catch (err)->
+					callback err
+				.then (data)->
+					callback null, _(data).sortBy (value, i)=> i
 
 	save: (req, res, next)=>
 		exception = _.clone(req.body)
@@ -33,7 +35,7 @@ class ExceptionHandler
 		@swiffer.db.put 'exceptions', exception.clientTime, exception
 
 		data = 
-			name: 'exception'
+			name: 'exception:create'
 			data: exception
 
 		@events.emit 'io', data

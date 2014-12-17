@@ -11,15 +11,15 @@ class SessionManager extends EventEmitter
 	createSession: (sessID)=>
 		@swiffer.db.get 'sessions', sessID
 			.then (data)=>
-				@logger.log 'Resuming stored session', sessID, data
-				
 				# add the reconnect event
 				data.reconnect = [] if !data.reconnect
 				data.reconnect.push [ data.lastSeen, +new Date() ]
 
 				@sessions[sessID] = data
 			.finally =>
-				if !@sessions[sessID]
+				if @sessions[sessID]
+					@logger.log 'Resuming stored session', sessID, @sessions[sessID]
+				else
 					@logger.log 'Starting session', sessID
 					# there is not already a session by this id
 					@sessions[sessID] =

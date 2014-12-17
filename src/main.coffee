@@ -15,12 +15,13 @@ class Swiffer
 		@init()
 
 	init: ->
+		@module = new ModuleManager @prompt, @
+
 		@setupExpress()
 		@setupSocket()
 		@setupDatabase()
 		@setupAxon()
 
-		@module = new ModuleManager @prompt, @
 		@sessionManager = new SessionManager @prompt, @
 
 		@module.loadModule module for module in config.modules
@@ -108,19 +109,13 @@ class Swiffer
 			@prompt.setStatusLines [@prompt.clc.green "Listening on port #{config.port}"]
 
 
+	registerAPI: (events)=>
+
+
 	setupSocket: =>
 		@io = require('socket.io').listen(@appServer)
 
-		@io.sockets.on 'connection', (socket)=>
-			@module.proxyEvent 'connection', socket
-			socket.on 'api', (method, data, id)=>
-				reply = 
-					reply: (data)->
-						socket.emit 'apiResult', id, data
-					error: (data)->
-						socket.emit 'apiFailure', id, data
-
-				@module.proxyEvent "socket:#{method}", reply, data, id
+		@io.sockets.on 'connection', @module.addClient
 				
 
 	setupAxon: ->
