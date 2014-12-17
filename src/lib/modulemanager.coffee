@@ -64,10 +64,10 @@ class ModuleManager
 						method = module[method]
 					console.log "Binding #{api} to #{moduleName}"
 					socket.on api, ->
-						console.log 'Invoking this method!', arguments
-						myDomain.exit()
+						args = arguments
 						myDomain.run ->
-							method.apply module, arguments
+							console.log 'Invoking this method!', args
+							method.apply module, args
 
 	loadModule: (name)->
 		@unloadModule name
@@ -86,9 +86,9 @@ class ModuleManager
 
 					_(@swiffer.io.of('/').connected).each (client)->
 						client.on api, ->
-							myDomain.exit()
+							args = arguments
 							myDomain.run ->
-								method.apply module, arguments
+								method.apply module, args
 
 			if module.router
 				@logger.log "Setting up the router proxy"

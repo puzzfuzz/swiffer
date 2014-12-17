@@ -14,6 +14,7 @@ class ExceptionHandler
 		@router.post '/exception', @save, @send
 
 	getException: (data, callback)=>
+		console.log "is this thing on?", arguments
 		if data?.id # if there's an ID then we fetch
 			@swiffer.db.get 'exceptions', id
 				.catch (err)->
