@@ -50,7 +50,7 @@ class SessionManager extends EventEmitter
 				@swiffer.db.put 'sessions', sessID, sess
 
 
-		storeSession sessID
+		@storeSession sessID
 		@emit 'end', sessID
 
 		
