@@ -29,5 +29,9 @@
     "redis": "~0.12.1",
     "socket.io": "~1.2.1",
     "underscore": "~1.7.0"
+  },
+  "devDependencies": {
+    "browserify": "^7.0.2",
+    "gulp": "^3.8.10"
   }
 }

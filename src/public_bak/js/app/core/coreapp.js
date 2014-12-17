@@ -2,7 +2,7 @@
  * Core App baseline and generic functionality
  */
 define(['jquery',
-	'backbone', 'marionette', 'underscore', 'router',
+	'backbone', 'marionette', 'underscore',
 	'moment',
 	'lib'
 ],
@@ -21,5 +21,4 @@ function($, Backbone, Marionette, _) {
 	});
 
 	return App;
-
 });

@@ -1,7 +1,7 @@
 /**
  * Convenience extensions to core Backbone Objects
  */
-define(['../../../.', 'backbone', 'underscore','moment',
+define(['jquery', 'backbone', 'underscore','moment',
 ],
 function($, Backbone, _) {
 

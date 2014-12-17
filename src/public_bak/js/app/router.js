@@ -1,9 +1,9 @@
 define([
-	'../../.',
+	'jquery',
 	'underscore',
 	'backbone',
-	'coreapp'
-], function($, _, Backbone, App){
+	'core/socket'
+], function($, _, Backbone){
 
 function drawException(exception) {
 	var panel = $('<div />', {
@@ -12,6 +12,7 @@ function drawException(exception) {
 		body = $('<div />', {
 			'class': 'panel-body'
 		});
+
 	panel.append([
 		'<div class="panel-heading">',
 			'<h3 class="panel-title">',
@@ -33,20 +34,19 @@ function drawException(exception) {
 	$('.exceptions_wrap').prepend(panel);
 }
 
-
-	App.Router = Backbone.Router.extend({
-		routes: {
-			// Define some URL routes
+var Router = Backbone.Router.extend({
+	routes: {
+		// Define some URL routes
 //			'/projects': 'showProjects',
 //			'/users': 'showUsers',
 //
-			'exception/:id': 'showException',
+		'exception/:id': 'showException',
 
-			// Default
-			'*actions': 'defaultAction'
-		},
+		// Default
+		'*actions': 'defaultAction'
+	},
 
-		initialize : function(){
+	initialize : function(){
 //			var app_router = new AppRouter;
 
 //			app_router.on('showProjects', function(){
@@ -66,23 +66,33 @@ function drawException(exception) {
 //				console.log('No route:', actions);
 //			});
 //			Backbone.history.start();
-		},
+	},
 
-		showException: function(id) {
-			console.log("Trying to show this exception", id);
+	showException: function(id) {
+		console.log("Trying to show this exception", id);
 
-			$(".exceptions_wrap").empty();
-			App.API('getException', id).done(drawException);
-		},
+		$(".exceptions_wrap").empty();
+		App.API('getException', id).done(drawException);
+	},
 
-		defaultAction: function(actions) {
-			console.log('No route:', actions);
-			$(".exceptions_wrap").empty();
-			App.API('listExceptions').done(function(list) {
-				_(list).each(drawException);
-			});
-		}
+	defaultAction: function(actions) {
+		console.log('No route:', actions);
+		$(".exceptions_wrap").empty();
+		App.API('listExceptions').done(function(list) {
+			_(list).each(drawException);
+		});
+	}
+});
+
+App.addInitializer(function(options) {
+	console.log('starting router...');
+	new Router();
+	Backbone.history.start({
+		root: "/swiffer/",
+		pushState: true
 	});
+});
 
-	return App;
+return App;
+
 });

@@ -6,19 +6,23 @@ requirejs.config({
 	"baseUrl": "/js/app",
 	urlArgs: '_=' + (new Date()).getTime(),
 	"paths": {
-		"app":          "app",
 		"jquery":       "../lib/jquery.min",
 		"socket.io":    "/socket.io/socket.io",
 		"backbone":     "../lib/backbone-min",
 		"underscore":   "../lib/underscore-min",
 		"moment":       "../lib/moment",
+		"marionette":   "../lib/marionette/backbone.marionette",
+		"bootstrap":    "/bootstrap/js/bootstrap",
 		"coreapp":      "core/coreapp",
 		"lib":          "core/lib",
-		"router":       "router"
 	},
 	shim: {
 		jquery: {
 			exports: 'jQuery'
+		},
+		backbone: {
+			deps: ['jquery'],
+			exports: 'Backbone'
 		}
 	}
 });
@@ -30,7 +34,8 @@ require([
 
 	// Load our app module and pass it to our definition function
 	'app',
-], function(App){
+	'lib'
+], function(App) {
 	// The "app" dependency is passed in as "App"
-	App.initialize();
+	App.start();
 });

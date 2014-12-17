@@ -10,8 +10,8 @@ var merge = require('merge-stream');
 var buffer = require('vinyl-buffer');
 var _ = require('lodash');
 
-var browserSync = require('browser-sync');
-var reload = browserSync.reload;
+// var browserSync = require('browser-sync');
+// var reload = browserSync.reload;
 
 //var api = require('./api/api');
 
