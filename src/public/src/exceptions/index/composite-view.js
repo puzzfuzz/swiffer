@@ -10,7 +10,6 @@ module.exports = CompositeView.extend({
 
 	initialize: function(options) {
 		this.models = options.collection.models;
-		delete this.collection;
 		this.state.start = (options.page - 1) * this.state.limit;
 	},
 
@@ -27,7 +26,6 @@ module.exports = CompositeView.extend({
 	},
 
 	onBeforeRender: function() {
-		debugger;
 		var filtered = _.chain(this.models)
 			.sortBy(function(model){return model.get('clientTime')})
 			.reverse()
