@@ -3,6 +3,9 @@ express = require 'express'
 bodyParser = require 'body-parser'
 
 class RouterHandler
+	api:
+		'route:read': 'getRoute'
+
 	constructor: (@logger, @swiffer, @events)->
 		@router = express.Router()
 
@@ -11,13 +14,24 @@ class RouterHandler
 
 		# @swiffer.app.use @router
 
-		@events.on 'socket:listRoutes', (socket, session)=>
-			@swiffer.db.getList "routes:#{session}"
-				.catch (err)->
-					socket.error err
-				.then (data)->
-					socket.reply _(data).sortBy (value, i)=> i
+		@router.get '/route', (req, res)=>
+			@getRoute req.query, (err, data)=>
+				if err
+					res.status(500).json({error: err})
+				else
+					res.status(200).json(data)
 
+	getRoute: (data, callback)->
+		if !data.id
+			callback ({
+				error: 1
+				message: 'id parameter required'
+			}, null)
+		@swiffer.db.getList "routes:#{data.id}"
+			.catch (err)->
+				callback err, null
+			.then (data)->
+				callback null, (_(data).sortBy (value, i)=> i)
 
 	save: (req, res, next)=>
 		routes = _.clone(req.body)
