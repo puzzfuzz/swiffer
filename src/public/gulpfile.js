@@ -107,8 +107,8 @@ gulp.task('build', [
 ]);
 
 gulp.task('test', [
-  'jshint',
-  'mocha'
+  'jshint'
+//  'mocha'
 ]);
 
 gulp.task('watch', ['build'], function() {

@@ -78,7 +78,6 @@
     "jquery": "^2.1.0",
     "lodash": "^2.4.1",
     "nprogress": "^0.1.6",
-    "socket.io": "~1.2.1",
     "backbone.iobind": "~0.4.9",
     "socket.io-client": "~1.2.1"
   },

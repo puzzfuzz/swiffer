@@ -18,16 +18,18 @@ module.exports = CompositeView.extend({
 	childViewContainer: 'div.list-group',
 
 	collectionEvents: {
-		'change': 'render'
+		'change add remove reset': 'render'
 	},
 
 	state: {
 		start: 0,
-		limit: 20
+		limit: 10
 	},
 
 	onBeforeRender: function() {
 		var filtered = _.chain(this.models)
+			.sortBy(function(model){return model.get('clientTime')})
+			.reverse()
 			.drop(this.state.start)
 			.take(this.state.limit)
 			.value();

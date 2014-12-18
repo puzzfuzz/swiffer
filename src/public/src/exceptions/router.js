@@ -12,7 +12,7 @@ module.exports = Router.extend({
 	},
 
 	onBeforeEnter: function() {
-		Radio.command('header', 'activate', { path: 'colors' });
+		Radio.command('header', 'activate', { path: 'exceptions' });
 	},
 
 	routes: {

@@ -1,8 +1,8 @@
-var Collection = require('src/common/collection');
+var Collection = require('src/common/socketCollection');
 var Model = require('./model');
 
 module.exports = Collection.extend({
-	url: 'listExceptions',
+	url: 'exception',
 	model: Model
 });
 

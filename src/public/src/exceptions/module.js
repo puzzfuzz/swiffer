@@ -8,7 +8,7 @@ module.exports = Module.extend({
 
 		Radio.command('header', 'add', {
 			name: 'Exceptions',
-			path: 'exeptions',
+			path: 'exceptions',
 			type: 'primary'
 		});
 	}
