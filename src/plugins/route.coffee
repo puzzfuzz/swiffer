@@ -12,14 +12,6 @@ class RouterHandler
 		@router.use bodyParser.json()
 		@router.post '/route', @save
 
-		# @swiffer.app.use @router
-
-		@router.get '/route', (req, res)=>
-			@getRoute req.query, (err, data)=>
-				if err
-					res.status(500).json({error: err})
-				else
-					res.status(200).json(data)
 
 	getRoute: (data, callback)->
 		if !data.id

@@ -53,21 +53,38 @@ class ModuleManager
 		delete @domains[name]
 		delete @modules[name]
 
-	addClient: (socket)=>
+
+	bindAPI: (moduleName, client)->
+		module = @modules[moduleName]
+		if !module.api
+			return
+		myDomain = @getDomain moduleName
+		_(module.api).each (method, api)=>
+			if typeof method == 'string'
+				method = module[method]
+			parts = api.split ':'
+
+			if parts[1] == 'read' and module.router
+				module.router.get "/#{parts[0]}", (req, res)=>
+					method.apply module, [
+						req.query,
+						(err, data)=>
+							if err
+								res.status(500).json({error: err})
+							else
+								res.status(200).json(data)
+						]
+
+			client.on api, ->
+				args = arguments
+				myDomain.run ->
+					method.apply module, args
+
+	addClient: (client)=>
 		console.log "Creating a new client for the modules"
-		@proxyEvent 'connection', socket
+		@proxyEvent 'connection', client
 		_(@modules).each (module, moduleName)=>
-			if module.api
-				myDomain = @getDomain moduleName
-				_(module.api).each (method, api)->
-					if typeof method == 'string'
-						method = module[method]
-					console.log "Binding #{api} to #{moduleName}"
-					socket.on api, ->
-						args = arguments
-						myDomain.run ->
-							console.log 'Invoking this method!', args
-							method.apply module, args
+			@bindAPI moduleName, client
 
 	loadModule: (name)->
 		@unloadModule name
@@ -78,17 +95,9 @@ class ModuleManager
 			Module = require("../plugins/#{name}")
 			module = @modules[name] = new Module @logger, @swiffer, @getEventProxy(name)
 
-
 			if module.api
-				_(module.api).each (method, api)=>
-					if typeof method == 'string'
-						method = module[method]
-
-					_(@swiffer.io.of('/').connected).each (client)->
-						client.on api, ->
-							args = arguments
-							myDomain.run ->
-								method.apply module, args
+				_(@swiffer.io.of('/').connected).each (client)=>
+					@bindAPI name, client
 
 			if module.router
 				@logger.log "Setting up the router proxy"

@@ -11,12 +11,6 @@ class ExceptionHandler
 		@router = express.Router()
 
 		@router.post '/exception', @save, @send
-		@router.get '/exception', (req, res)=>
-			@getException req.query, (err, data)=>
-				if err
-					res.status(500).json({error: err})
-				else
-					res.status(200).json(data)
 
 	getException: (data, callback)=>
 		console.log "is this thing on?", arguments
