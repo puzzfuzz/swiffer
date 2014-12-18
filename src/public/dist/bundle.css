@@ -9368,7 +9368,7 @@ body,
  * Uncomment this section to see when new DOM elements are created.
  * This makes it easy to debug re-renders.
  */
-* {
+.new {
   -webkit-animation: flash 600ms 1;
   animation: flash 600ms 1;
 }

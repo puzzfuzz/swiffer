@@ -14,5 +14,12 @@ module.exports = ItemView.extend({
 
 	modelEvents: {
 		'all': 'render'
+	},
+
+	onRender: function(){
+		if (this.model.get('__isNew')) {
+			this.$el.addClass('new');
+			this.model.set({'__isNew':false},{silent:true});
+		}
 	}
 });

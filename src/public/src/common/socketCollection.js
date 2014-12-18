@@ -13,6 +13,7 @@ module.exports = Collection.extend({
 		// make sure no duplicates, just in case
 		var exists = this.get(data.id);
 		if (!exists) {
+			data.__isNew = true;
 			this.add(data, {parse: true});
 		} else {
 			data.fromServer = true;

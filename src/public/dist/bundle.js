@@ -34349,6 +34349,7 @@ module.exports = Collection.extend({
 		// make sure no duplicates, just in case
 		var exists = this.get(data.id);
 		if (!exists) {
+			data.__isNew = true;
 			this.add(data, {parse: true});
 		} else {
 			data.fromServer = true;
@@ -34516,7 +34517,6 @@ module.exports = CompositeView.extend({
 
 	initialize: function(options) {
 		this.models = options.collection.models;
-		delete this.collection;
 		this.state.start = (options.page - 1) * this.state.limit;
 	},
 
@@ -34533,7 +34533,6 @@ module.exports = CompositeView.extend({
 	},
 
 	onBeforeRender: function() {
-		debugger;
 		var filtered = _.chain(this.models)
 			.sortBy(function(model){return model.get('clientTime')})
 			.reverse()
@@ -34606,6 +34605,13 @@ module.exports = ItemView.extend({
 
 	modelEvents: {
 		'all': 'render'
+	},
+
+	onRender: function(){
+		if (this.model.get('__isNew')) {
+			this.$el.addClass('new');
+			this.model.set({'__isNew':false},{silent:true});
+		}
 	}
 });
 
