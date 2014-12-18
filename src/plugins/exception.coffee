@@ -12,6 +12,12 @@ class ExceptionHandler
 		@router = express.Router()
 
 		@router.post '/exception', @save, @send
+		@router.get '/exception', (req, res)=>
+			@swiffer.db.list 'exceptions'
+				.catch (err)->
+					res.status(500).json({error: err})
+				.then (data)->
+					res.status(200).json(data)
 
 	getException: (data, callback)=>
 		console.log "is this thing on?", arguments
