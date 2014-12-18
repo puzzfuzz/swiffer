@@ -23,10 +23,10 @@ class RouterHandler
 
 	getRoute: (data, callback)->
 		if !data.id
-			callback ({
-				error: 1
-				message: 'id parameter required'
-			}, null)
+			callback {
+					error: 1
+					message: 'id parameter required'
+				}, null
 		@swiffer.db.getList "routes:#{data.id}"
 			.catch (err)->
 				callback err, null
