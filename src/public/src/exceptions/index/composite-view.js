@@ -27,6 +27,7 @@ module.exports = CompositeView.extend({
 	},
 
 	onBeforeRender: function() {
+		debugger;
 		var filtered = _.chain(this.models)
 			.sortBy(function(model){return model.get('clientTime')})
 			.reverse()

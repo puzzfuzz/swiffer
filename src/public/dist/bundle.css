@@ -9368,3 +9368,17 @@ body,
  * Uncomment this section to see when new DOM elements are created.
  * This makes it easy to debug re-renders.
  */
+* {
+  -webkit-animation: flash 600ms 1;
+  animation: flash 600ms 1;
+}
+@-webkit-keyframes flash {
+  0% {
+    box-shadow: inset 0 0 0 4px red;
+  }
+}
+@keyframes flash {
+  0% {
+    box-shadow: inset 0 0 0 4px red;
+  }
+}
