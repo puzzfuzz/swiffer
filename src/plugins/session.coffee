@@ -35,7 +35,7 @@ class SessionManager extends EventEmitter
 
 	getSession: (data, callback)->
 		if data?.id # if there's an ID then we fetch
-			@swiffer.db.get 'sessions', id
+			@swiffer.db.get 'sessions', data.id
 				.catch (err)->
 					socket.error err
 				.then (value)->

@@ -21,7 +21,7 @@ class ExceptionHandler
 	getException: (data, callback)=>
 		console.log "is this thing on?", arguments
 		if data?.id # if there's an ID then we fetch
-			@swiffer.db.get 'exceptions', id
+			@swiffer.db.get 'exceptions', data.id
 				.catch (err)->
 					socket.error err
 				.then (value)->
