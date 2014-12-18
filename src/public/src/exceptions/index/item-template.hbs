@@ -1,2 +1,17 @@
-<h4 class="list-group-item-heading">{{errorMessage}}</h4>
-<p class="list-group-item-text">{{id}}</p>
+<div class="panel-heading">
+    <h4 class="list-group-item-heading">
+        <div class="clearfix">
+            {{errorMessage}}
+            <button type="button" class="btn btn-sm btn-danger pull-right" data-toggle="collapse" data-target="#trace_{{id}}">Stack</button>
+        </div>
+    </h4>
+</div>
+<div class="panel-body">
+    <div>
+        <span>id:</span><span class="label label-default">{{id}}</span>
+        <span>user:</span><span class="label label-default">{{userName}} | {{user}}</span>
+    </div>
+    <br/>
+    <pre id="trace_{{id}}" class="collapse">{{trace}}</pre>
+</div>
+

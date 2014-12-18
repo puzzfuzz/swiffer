@@ -34410,7 +34410,11 @@ var Model = require('./model');
 
 module.exports = Collection.extend({
 	url: 'exception',
-	model: Model
+	model: Model,
+
+	comparator: function(model) {
+		return -model.get("clientTime");
+	}
 });
 
 
@@ -34513,7 +34517,7 @@ var template = require('./composite-template.hbs');
 
 module.exports = CompositeView.extend({
 	template: template,
-	className: 'colors colors--index container',
+	className: 'exception exception--index container',
 
 	initialize: function(options) {
 		this.models = options.collection.models;
@@ -34523,9 +34527,10 @@ module.exports = CompositeView.extend({
 	childView: ItemView,
 	childViewContainer: 'div.list-group',
 
-	collectionEvents: {
-		'change add remove reset': 'render'
-	},
+//	collectionEvents: {
+//		'change': 'render',
+//		'before:add': 'onBeforeItemAdded'
+//	},
 
 	state: {
 		start: 0,
@@ -34533,15 +34538,31 @@ module.exports = CompositeView.extend({
 	},
 
 	onBeforeRender: function() {
-		var filtered = _.chain(this.models)
-			.sortBy(function(model){return model.get('clientTime')})
-			.reverse()
-			.drop(this.state.start)
-			.take(this.state.limit)
-			.value();
+//		var filtered = _.chain(this.models)
+//			.sortBy(function(model){return model.get('clientTime')})
+//			.reverse()
+//			.drop(this.state.start)
+//			.take(this.state.limit)
+//			.value();
 
-		this.collection = new Collection(filtered);
+
+		this.onBeforeAddChild = function(){};
+
+//		this.collection = new Collection(filtered);
 	},
+
+	onRender: function(){
+		this.onBeforeAddChild = this.newExceptionAdded;
+	},
+
+	newExceptionAdded: function(exceptionView) {
+		this.$childViewContainer.prepend(exceptionView.$el);
+		exceptionView.onAttach();
+	},
+
+//	onBeforeAddChild: function() {
+//		debugger;
+//	},
 
 	templateHelpers: function() {
 		var total   = Math.floor(this.models.length / this.state.limit) + 1;
@@ -34576,46 +34597,82 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<h4 class=\"list-group-item-heading\">";
+  buffer += "<div class=\"panel-heading\">\n    <h4 class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            ";
   if (helper = helpers.errorMessage) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.errorMessage); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</h4>\n<p class=\"list-group-item-text\">";
+    + "\n            <button type=\"button\" class=\"btn btn-sm btn-danger pull-right\" data-toggle=\"collapse\" data-target=\"#trace_";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</p>\n";
+    + "\">Stack</button>\n        </div>\n    </h4>\n</div>\n<div class=\"panel-body\">\n    <div>\n        <span>id:</span><span class=\"label label-default\">";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n        <span>user:</span><span class=\"label label-default\">";
+  if (helper = helpers.userName) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.userName); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + " | ";
+  if (helper = helpers.user) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.user); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n    </div>\n    <br/>\n    <pre id=\"trace_";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\" class=\"collapse\">";
+  if (helper = helpers.trace) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.trace); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</pre>\n</div>\n\n";
   return buffer;
   });
 
 },{"hbsfy/runtime":"/Users/Chris/Dev/swiffer/src/public/node_modules/hbsfy/runtime.js"}],"/Users/Chris/Dev/swiffer/src/public/src/exceptions/index/item-view.js":[function(require,module,exports){
 var ItemView = require('./../../common/item-view.js');
 var template = require('./item-template.hbs');
+var _ = require('lodash');
 
 module.exports = ItemView.extend({
-	tagName: 'a',
+	tagName: 'div',
 	template: template,
-	className: 'exceptions__item list-group-item',
+	className: 'exceptions__item panel panel-default',
 
-	attributes: function () {
-		return {
-			href: '#exceptions/' + this.model.get('id')
-		};
-	},
+//	attributes: function () {
+//		return {
+//			href: '#exceptions/' + this.model.get('id')
+//		};
+//	},
 
 	modelEvents: {
 		'all': 'render'
 	},
 
+//	onBeforeRender: function() {
+//		if (this.model.get('__isNew')) {
+//			this.$el.addClass('collapse');
+//		}
+//	},
+
 	onRender: function(){
 		if (this.model.get('__isNew')) {
-			this.$el.addClass('new');
+//			setTimeout(function(){this.$el.collapse('show')}, 1000);
+
 			this.model.set({'__isNew':false},{silent:true});
 		}
+	},
+
+	onAttach: function() {
+		var self = this,
+			timeout = (this.model.collection ? this.model.collection.indexOf(this.model) : 0) * 150;
+		_.delay(function(){self.$el.addClass('added');}, timeout);
+		console.log('onAttach called');
 	}
+
 });
 
-},{"./../../common/item-view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/item-view.js","./item-template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/exceptions/index/item-template.hbs"}],"/Users/Chris/Dev/swiffer/src/public/src/exceptions/index/route.js":[function(require,module,exports){
+},{"./../../common/item-view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/item-view.js","./item-template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/exceptions/index/item-template.hbs","lodash":"/Users/Chris/Dev/swiffer/src/public/node_modules/lodash/dist/lodash.js"}],"/Users/Chris/Dev/swiffer/src/public/src/exceptions/index/route.js":[function(require,module,exports){
 var Route = require('./../../common/route.js');
 var View = require('./composite-view');
 
@@ -34946,7 +35003,7 @@ function program2(depth0,data) {
   return "class=\"active\"";
   }
 
-  buffer += "<div class=\"container-fluid\">\n  <div class=\"navbar-header\">\n    <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#navbar-collapse\">\n      <span class=\"sr-only\">Toggle navigation</span>\n      <span class=\"icon-bar\"></span>\n      <span class=\"icon-bar\"></span>\n      <span class=\"icon-bar\"></span>\n    </button>\n\n    <a class=\"navbar-brand\" href=\"#\">Marionette <span>Wires</span></a>\n  </div>\n\n  <div class=\"collapse navbar-collapse\" id=\"navbar-collapse\">\n    <ul class=\"nav navbar-nav\">\n      ";
+  buffer += "<div class=\"container-fluid\">\n  <div class=\"navbar-header\">\n    <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#navbar-collapse\">\n      <span class=\"sr-only\">Toggle navigation</span>\n      <span class=\"icon-bar\"></span>\n      <span class=\"icon-bar\"></span>\n      <span class=\"icon-bar\"></span>\n    </button>\n\n    <a class=\"navbar-brand\" href=\"#\">Swiffer <span>JS</span></a>\n  </div>\n\n  <div class=\"collapse navbar-collapse\" id=\"navbar-collapse\">\n    <ul class=\"nav navbar-nav\">\n      ";
   stack1 = helpers.each.call(depth0, (depth0 && depth0.primaryItems), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
   if(stack1 || stack1 === 0) { buffer += stack1; }
   buffer += "\n    </ul>\n\n    <ul class=\"nav navbar-nav navbar-right\">\n      ";

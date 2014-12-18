@@ -6,7 +6,7 @@ var template = require('./composite-template.hbs');
 
 module.exports = CompositeView.extend({
 	template: template,
-	className: 'colors colors--index container',
+	className: 'exception exception--index container',
 
 	initialize: function(options) {
 		this.models = options.collection.models;
@@ -16,9 +16,10 @@ module.exports = CompositeView.extend({
 	childView: ItemView,
 	childViewContainer: 'div.list-group',
 
-	collectionEvents: {
-		'change add remove reset': 'render'
-	},
+//	collectionEvents: {
+//		'change': 'render',
+//		'before:add': 'onBeforeItemAdded'
+//	},
 
 	state: {
 		start: 0,
@@ -26,15 +27,31 @@ module.exports = CompositeView.extend({
 	},
 
 	onBeforeRender: function() {
-		var filtered = _.chain(this.models)
-			.sortBy(function(model){return model.get('clientTime')})
-			.reverse()
-			.drop(this.state.start)
-			.take(this.state.limit)
-			.value();
+//		var filtered = _.chain(this.models)
+//			.sortBy(function(model){return model.get('clientTime')})
+//			.reverse()
+//			.drop(this.state.start)
+//			.take(this.state.limit)
+//			.value();
 
-		this.collection = new Collection(filtered);
+
+		this.onBeforeAddChild = function(){};
+
+//		this.collection = new Collection(filtered);
 	},
+
+	onRender: function(){
+		this.onBeforeAddChild = this.newExceptionAdded;
+	},
+
+	newExceptionAdded: function(exceptionView) {
+		this.$childViewContainer.prepend(exceptionView.$el);
+		exceptionView.onAttach();
+	},
+
+//	onBeforeAddChild: function() {
+//		debugger;
+//	},
 
 	templateHelpers: function() {
 		var total   = Math.floor(this.models.length / this.state.limit) + 1;

@@ -9357,28 +9357,22 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
     font-size: 28px;
   }
 }
+.exceptions__item {
+  -webkit-transform: translateX(1999px);
+      -ms-transform: translateX(1999px);
+          transform: translateX(1999px);
+  -webkit-transition: all 0.3s ease-in;
+          transition: all 0.3s ease-in;
+}
+.exceptions__item.added {
+  -webkit-transform: translateX(0);
+      -ms-transform: translateX(0);
+          transform: translateX(0);
+}
 html,
 body,
 .application {
   position: relative;
   height: 100%;
   width: 100%;
-}
-/**
- * Uncomment this section to see when new DOM elements are created.
- * This makes it easy to debug re-renders.
- */
-.new {
-  -webkit-animation: flash 600ms 1;
-  animation: flash 600ms 1;
-}
-@-webkit-keyframes flash {
-  0% {
-    box-shadow: inset 0 0 0 4px red;
-  }
-}
-@keyframes flash {
-  0% {
-    box-shadow: inset 0 0 0 4px red;
-  }
 }

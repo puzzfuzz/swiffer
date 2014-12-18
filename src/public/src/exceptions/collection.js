@@ -3,6 +3,10 @@ var Model = require('./model');
 
 module.exports = Collection.extend({
 	url: 'exception',
-	model: Model
+	model: Model,
+
+	comparator: function(model) {
+		return -model.get("clientTime");
+	}
 });
 
