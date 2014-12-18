@@ -1,12 +1,44 @@
+express = require 'express'
 EventEmitter = require('events').EventEmitter
 _ = require 'underscore'
 
 class SessionManager extends EventEmitter
-	constructor: (@logger, @swiffer)->
-		@sessions = {}
+	api:
+		'session:read': 'getSession'
 
-	getSession: (sessID)->
-		return @sessions[sessID]
+	constructor: (@logger, @swiffer, @events)->
+		@sessions = {}
+		@router = express.Router()
+
+		@router.post '/poll', (req, res, next)=>
+			@poll req.body.session
+			res.status(200).json({ error: null })
+
+	emitEvent: (type, data)->
+		data = _.clone data
+
+		if data.timerID
+			delete data.timerID
+
+		socketData = 
+			name: "session:#{type}"
+			data: data
+
+		@events.emit 'io', socketData
+
+	getSession: (data, callback)->
+		if data?.id # if there's an ID then we fetch
+			@swiffer.db.get 'sessions', id
+				.catch (err)->
+					socket.error err
+				.then (value)->
+					socket.reply null, value
+		else # otherwise we just read
+			@swiffer.db.list 'sessions'
+				.catch (err)->
+					callback err
+				.then (data)->
+					callback null, _(data).sortBy (value, i)=> i
 
 	createSession: (sessID)=>
 		@swiffer.db.get 'sessions', sessID
@@ -27,7 +59,8 @@ class SessionManager extends EventEmitter
 						startTime: +new Date()
 
 				@emit 'start', sessID
-				@poll sessID
+				@poll sessID, true
+				@emitEvent 'create', @sessions[sessID]
 
 
 	endSession: (sessID)=>
@@ -48,6 +81,7 @@ class SessionManager extends EventEmitter
 								.value()
 			.finally =>
 				@swiffer.db.put 'sessions', sessID, sess
+				@emitEvent 'update', sess
 
 
 		@storeSession sessID
@@ -55,7 +89,7 @@ class SessionManager extends EventEmitter
 
 		
 
-	poll: (sessID)=>
+	poll: (sessID, silent)=>
 		if !@sessions[sessID]
 			return @createSession sessID
 
@@ -64,6 +98,9 @@ class SessionManager extends EventEmitter
 		@sessions[sessID].lastSeen = +new Date()
 
 		@storeSession sessID
+		if !silent
+			@emitEvent 'update', @sessions[sessID]
+
 
 	storeSession: (sessID, data)=>
 		data = @sessions[sessID] if !data

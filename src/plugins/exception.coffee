@@ -3,9 +3,8 @@ express = require 'express'
 bodyParser = require 'body-parser'
 
 class ExceptionHandler
-	api: {
+	api:
 		'exception:read': 'getException'
-	}
 
 	constructor: (@logger, @swiffer, @events)->
 		@logger.log "Exception handler constructor is running!!"
@@ -37,9 +36,9 @@ class ExceptionHandler
 	save: (req, res, next)=>
 		exception = _.clone(req.body)
 
-		exception.name = 'exception'
+		exception.id = exception.clientTime
 
-		@swiffer.db.put 'exceptions', exception.clientTime, exception
+		@swiffer.db.put 'exceptions', exception.id, exception
 
 		data = 
 			name: 'exception:create'
