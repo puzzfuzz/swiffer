@@ -11,8 +11,15 @@ class SessionManager extends EventEmitter
 		@router = express.Router()
 
 		@router.post '/poll', (req, res, next)=>
-			@poll req.body.session
+			# reply right away
 			res.status(200).json({ error: null })
+
+			sessID = req.body.session
+
+			if @sessions[sessID] and req.body.lastIdle
+				@sessions[sessID].lastIdle = req.body.lastIdle
+
+			@poll req.body.session
 
 	emitEvent: (type, data)->
 		data = _.clone data
