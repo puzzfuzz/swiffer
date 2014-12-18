@@ -1,9 +1,14 @@
-var Model = require('src/common/model');
+var Model = require('src/common/socketModel');
 
 module.exports = Model.extend({
-	urlRoot: 'getException',
+	urlRoot: 'exception',
 
 	defaults: {
 		active: false
+	},
+
+	parse : function(data) {
+		data.id = data.id || data.clientTime;
+		return data;
 	}
 });

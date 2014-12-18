@@ -4,9 +4,11 @@ require('bootstrap');
 require('backbone.syphon');
 require('backbone-query-parameters');
 
-var io = require('socket.io-client');
+window.socket = io.connect('/');
 
-window.socket = io.connect();
+window.socket.on('connect', function(){
+	console.log('socket connected', arguments);
+});
 
 require('backbone.iobind');
 require('backbone.iosync');

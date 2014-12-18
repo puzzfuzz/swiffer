@@ -40,16 +40,16 @@ app.module('index', {
   moduleClass: require('src/index/module'),
   container: app.layout.content
 });
-
-app.module('colors', {
-  moduleClass: require('src/colors/module'),
-  container: app.layout.content
-});
-
-app.module('books', {
-  moduleClass: require('src/books/module'),
-  container: app.layout.content
-});
+//
+//app.module('colors', {
+//  moduleClass: require('src/colors/module'),
+//  container: app.layout.content
+//});
+//
+//app.module('books', {
+//  moduleClass: require('src/books/module'),
+//  container: app.layout.content
+//});
 
 app.module('exceptions', {
 	moduleClass: require('src/exceptions/module'),

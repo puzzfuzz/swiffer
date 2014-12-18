@@ -14,11 +14,11 @@ module.exports = Route.extend({
 	},
 
 	render: function(params) {
-//		var page = params && parseFloat(params.page) || 1;
+		var page = params && parseFloat(params.page) || 1;
 
 		this.view = new View({
 			collection: this.collection,
-//			page: page
+			page: page
 		});
 
 		this.container.show(this.view);
