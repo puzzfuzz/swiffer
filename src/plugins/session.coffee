@@ -21,6 +21,13 @@ class SessionManager extends EventEmitter
 
 			@poll req.body.session
 
+		@router.get '/session', (req, res)=>
+			@getSession req.query, (err, data)=>
+				if err
+					res.status(500).json({error: err})
+				else
+					res.status(200).json(data)
+
 	emitEvent: (type, data)->
 		data = _.clone data
 

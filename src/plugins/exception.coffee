@@ -12,10 +12,10 @@ class ExceptionHandler
 
 		@router.post '/exception', @save, @send
 		@router.get '/exception', (req, res)=>
-			@swiffer.db.list 'exceptions'
-				.catch (err)->
+			@getException req.query, (err, data)=>
+				if err
 					res.status(500).json({error: err})
-				.then (data)->
+				else
 					res.status(200).json(data)
 
 	getException: (data, callback)=>
