@@ -86,9 +86,13 @@
 			delete rpcgw.options.apiRoot;
 			delete rpcgw.options.apiKey;
 
-			setInterval(function() {
-				rpcgw.post('poll');
-			}, 10000)
+			if (options.poll !== false) {
+				setInterval(function() {
+					rpcgw.post('poll', {
+						lastIdle: App.lastIdle
+					});
+				}, 10000);
+			}
 
 			return this;
 		},
