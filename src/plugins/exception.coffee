@@ -23,15 +23,15 @@ class ExceptionHandler
 		if data?.id # if there's an ID then we fetch
 			@swiffer.db.get 'exceptions', data.id
 				.catch (err)->
-					socket.error err
+					callback err, null
 				.then (value)->
-					socket.reply null, value
+					callback null, value
 		else # otherwise we just read
 			@swiffer.db.list 'exceptions'
 				.catch (err)->
-					callback err
+					callback err, null
 				.then (data)->
-					callback null, _(data).sortBy (value, i)=> i
+					callback null, (_(data).sortBy (value, i)=> i)
 
 	save: (req, res, next)=>
 		exception = _.clone(req.body)
