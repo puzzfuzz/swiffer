@@ -62,18 +62,6 @@ class ModuleManager
 		_(module.api).each (method, api)=>
 			if typeof method == 'string'
 				method = module[method]
-			parts = api.split ':'
-
-			if parts[1] == 'read' and module.router
-				module.router.get "/#{parts[0]}", (req, res)=>
-					method.apply module, [
-						req.query,
-						(err, data)=>
-							if err
-								res.status(500).json({error: err})
-							else
-								res.status(200).json(data)
-						]
 
 			client.on api, ->
 				args = arguments
@@ -98,6 +86,21 @@ class ModuleManager
 			if module.api
 				_(@swiffer.io.of('/').connected).each (client)=>
 					@bindAPI name, client
+
+				_(module.api).each (method, api)=>
+					if typeof method == 'string'
+						method = module[method]
+					parts = api.split ':'
+					if parts[1] == 'read' and module.router
+						module.router.get "/#{parts[0]}", (req, res)=>
+							method.apply module, [
+								req.query,
+								(err, data)=>
+									if err
+										res.status(500).json({error: err})
+									else
+										res.status(200).json(data)
+								]
 
 			if module.router
 				@logger.log "Setting up the router proxy"

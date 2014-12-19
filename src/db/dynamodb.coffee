@@ -90,9 +90,11 @@ class DynamoDB extends AbstractDatabase
 					AttributeName: 'id'
 					KeyType: 'HASH'
 				}]
-				ProvisionedThroughput:
-					ReadCapacityUnits: 5
-					WriteCapacityUnits: 5
+
+		if !schema.ProvisionedThroughput
+			schema.ProvisionedThroughput =
+				ReadCapacityUnits: 5
+				WriteCapacityUnits: 5
 		
 		schema.TableName = "swiffer_#{table}"
 
@@ -133,6 +135,26 @@ class DynamoDB extends AbstractDatabase
 		}, @createCallback deferr
 
 		deferr.promise
+
+	# right
+	pushList: (table, value)->
+		unimplemented()
+
+	popList: (table)->
+		unimplemented()
+
+	# left
+	unshiftList: (table, value)->
+		unimplemented()
+
+	shiftList: (table)->
+		unimplemented()
+
+	getList: (table)->
+		unimplemented()
+
+	setList: (table, list)->
+		unimplemented()
 
 	# utility
 	createCallback: (deferr)->

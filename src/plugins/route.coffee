@@ -16,8 +16,9 @@ class RouterHandler
 	getRoute: (data, callback)->
 		if !data.id
 			callback 'id parameter required', null
-		@swiffer.db.getList "routes:#{data.id}"
+		@swiffer.db.getList "routes", data.id
 			.catch (err)->
+				console.log err
 				callback err, null
 			.then (data)->
 				callback null, (_(data).sortBy (value, i)=> i)
@@ -25,12 +26,12 @@ class RouterHandler
 	save: (req, res, next)=>
 		routes = _.clone(req.body)
 
-		routes.name = 'route'
+		routes.id = routes.clientTime
 
-		@swiffer.db.pushList "routes:#{routes.session}", routes
+		@swiffer.db.pushList "routes", routes.session, routes
 
 		data = 
-			name: 'route'
+			name: 'route:create'
 			data: routes
 
 		@events.emit 'io', data

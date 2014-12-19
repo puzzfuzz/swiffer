@@ -80,7 +80,7 @@ class SessionManager extends EventEmitter
 
 		# extend
 		sess.endTime = +new Date()
-		@swiffer.db.getList "routes:#{sessID}"
+		@swiffer.db.getList "routes", sessID
 			.then (routes)->
 				sess.routes = _(routes).chain()
 								.pluck 'route'
