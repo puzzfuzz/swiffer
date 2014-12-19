@@ -127,11 +127,12 @@ class DynamoDB extends AbstractDatabase
 		deferr = Q.defer()
 
 		@checkTable(table, true).then =>
-			data.bucket = ""+bucket
+			value.id = ""+value.id
+			value.bucket = ""+bucket
 
 			@client.putItem {
 				TableName: "swiffer_#{table}"
-				Item: data
+				Item: value
 			}, @createCallback deferr
 
 		deferr.promise
@@ -152,7 +153,7 @@ class DynamoDB extends AbstractDatabase
 		params =
 			TableName: "swiffer_#{table}"
 			KeyConditions: [
-				@client.Condition "bucket", "EQ", bucket, null
+				@client.Condition "bucket", "EQ", ""+bucket
 			]
 		@client.query params, @createCallback deferr
 
@@ -164,14 +165,15 @@ class DynamoDB extends AbstractDatabase
 	# utility
 	createCallback: (deferr)->
 		return (err, data)->
-			console.log arguments
 			if err
 				deferr.reject err
 			else
 				if data.Item
 					data = data.Item
-				if data.Items
+				else if data.Items
 					data = data.Items
+				# else
+					# return deferr.reject {message: "Not found"}
 				deferr.resolve data
 
 module.exports = DynamoDB
