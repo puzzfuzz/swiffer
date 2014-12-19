@@ -29,6 +29,8 @@ class RouterHandler
 		routes.id = routes.clientTime
 
 		@swiffer.db.pushList "routes", routes.session, routes
+			.catch (err)->
+				console.log "Error pushing routes!", err
 
 		data = 
 			name: 'route:create'
