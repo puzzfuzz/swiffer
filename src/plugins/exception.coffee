@@ -23,10 +23,9 @@ class ExceptionHandler
 		else # otherwise we just read
 			@swiffer.db.list 'exceptions'
 				.catch (err)->
-					console.log err
-					callback err.message, null
+					console.log 'Error', err
+					callback((err.message || err), null)
 				.then (data)->
-					console.log value
 					callback null, (_(data).sortBy (value, i)=> i)
 
 	save: (req, res, next)=>
