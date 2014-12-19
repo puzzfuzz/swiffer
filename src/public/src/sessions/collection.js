@@ -6,6 +6,6 @@ module.exports = Collection.extend({
 	model: Model,
 
 	comparator: function(model) {
-		return -model.get("clientTime");
+		return -model.get("startTime");
 	}
 });

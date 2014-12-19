@@ -21,11 +21,11 @@ module.exports = CompositeView.extend({
 	},
 
 	onRender: function(){
-		this.onBeforeAddChild = this.newExceptionAdded;
+		this.onBeforeAddChild = this.newSessionAdded;
 	},
 
-	newExceptionAdded: function(exceptionView) {
-		this.$childViewContainer.prepend(exceptionView.$el);
-		exceptionView.onAttach();
+	newSessionAdded: function(sessionView) {
+		this.$childViewContainer.prepend(sessionView.$el);
+		sessionView.onAttach();
 	},
 });

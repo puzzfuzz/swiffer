@@ -26,13 +26,23 @@ module.exports = ItemView.extend({
 
 	templateHelpers: function() {
 		var self = this;
+		var state = {};
+		if (self.model.isActive()) {
+			state.string = "ACTIVE";
+			state.label = "success";
+		} else if (self.model.isIdle()) {
+			state.string = "IDLE";
+			state.label = "warning";
+		} else {
+			state.string = "CLOSED";
+			state.label = "danger";
+		}
 		return {
-			active: function() {
-				return self.model.isActive();
-			},
+			stateString: state.string,
+			stateLabel: state.label,
 			duration: function(){
 				var duration;
-				if (self.model.isActive()) {
+				if (self.model.isActive() || self.model.isIdle()) {
 					duration = this.lastSeen - this.startTime;
 				} else {
 					duration = this.endTime - this.startTime;
