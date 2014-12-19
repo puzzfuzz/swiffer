@@ -52,13 +52,14 @@ class AbstractDatabase
 	createCallback: (deferr, parse)->
 		return (err, data)->
 			if err
+				console.log err
 				deferr.reject err
 			else
 				if parse
 					try
 						data = parse data 
-					catch
-						console.log data
+					catch e
+						console.log 'Error while parsing!', data, e
 				deferr.resolve data
 
 

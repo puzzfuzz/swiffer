@@ -27,8 +27,13 @@ class SessionManager extends EventEmitter
 		if data.timerID
 			delete data.timerID
 
+		if type == "create"
+			eventName = "session:create"
+		else
+			eventName = "session/#{data.id}:#{type}"
+
 		socketData = 
-			name: "session:#{type}"
+			name: eventName
 			data: data
 
 		@events.emit 'io', socketData
@@ -51,8 +56,9 @@ class SessionManager extends EventEmitter
 		@swiffer.db.get 'sessions', sessID
 			.then (data)=>
 				# add the reconnect event
+				delete data.endTime if data.endTime
 				data.reconnect = [] if !data.reconnect
-				data.reconnect.push [ data.lastSeen, +new Date() ]
+				data.reconnect.push [ data.lastSeen || +new Date(), +new Date() ]
 
 				@sessions[sessID] = data
 			.finally =>
@@ -88,7 +94,7 @@ class SessionManager extends EventEmitter
 								.value()
 			.finally =>
 				@swiffer.db.put 'sessions', sessID, sess
-				@emitEvent 'update', sess
+				@emitEvent "#{sessID}:update", sess
 
 
 		@storeSession sessID
@@ -106,7 +112,7 @@ class SessionManager extends EventEmitter
 
 		@storeSession sessID
 		if !silent
-			@emitEvent 'update', @sessions[sessID]
+			@emitEvent "#{sessID}:update", @sessions[sessID]
 
 
 	storeSession: (sessID, data)=>
