@@ -3,18 +3,20 @@ var Model = require('src/common/socketModel');
 module.exports = Model.extend({
 	urlRoot: 'session',
 
-	defaults: {
-//		active: false
-	},
-
 	parse : function(data) {
 		data.id = data.id || data.clientTime;
-//		data.active = !data.endTime;
-
 		return data;
 	},
 
 	isActive: function() {
-		return !this.get('endTime');
+		return !this.isClosed() && !this.isIdle();
+	},
+
+	isIdle: function() {
+		return (this.get('lastSeen') - this.get('lastIdle') > (5*60*1000));
+	},
+
+	isClosed: function() {
+		return !!this.get('endTime');
 	}
 });

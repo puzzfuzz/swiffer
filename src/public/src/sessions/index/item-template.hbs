@@ -2,11 +2,7 @@
     <h4 class="list-group-item-heading">
         <div class="clearfix">
             {{id}}
-            {{#if active}}
-                <span class="label label-success">ACTIVE</span>
-            {{else}}
-                <span class="label label-danger">CLOSED</span>
-            {{/if}}
+            <span class="label label-{{stateLabel}}">{{stateString}}</span>
             <span class="label label-info">{{duration}}</span>
         </div>
     </h4>

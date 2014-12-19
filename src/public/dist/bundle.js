@@ -38439,7 +38439,7 @@ module.exports = Collection.extend({
 	model: Model,
 
 	comparator: function(model) {
-		return -model.get("clientTime");
+		return -model.get("startTime");
 	}
 });
 },{"./../common/socketCollection.js":"/Users/Chris/Dev/swiffer/src/public/src/common/socketCollection.js","./model":"/Users/Chris/Dev/swiffer/src/public/src/sessions/model.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/index/composite-template.hbs":[function(require,module,exports){
@@ -38556,12 +38556,12 @@ module.exports = CompositeView.extend({
 	},
 
 	onRender: function(){
-		this.onBeforeAddChild = this.newExceptionAdded;
+		this.onBeforeAddChild = this.newSessionAdded;
 	},
 
-	newExceptionAdded: function(exceptionView) {
-		this.$childViewContainer.prepend(exceptionView.$el);
-		exceptionView.onAttach();
+	newSessionAdded: function(sessionView) {
+		this.$childViewContainer.prepend(sessionView.$el);
+		sessionView.onAttach();
 	},
 });
 
@@ -38571,28 +38571,22 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression, self=this;
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
-function program1(depth0,data) {
-  
-  
-  return "\n                <span class=\"label label-success\">ACTIVE</span>\n            ";
-  }
-
-function program3(depth0,data) {
-  
-  
-  return "\n                <span class=\"label label-danger\">CLOSED</span>\n            ";
-  }
 
   buffer += "<div class=\"panel-heading\">\n    <h4 class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            ";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\n            ";
-  stack1 = helpers['if'].call(depth0, (depth0 && depth0.active), {hash:{},inverse:self.program(3, program3, data),fn:self.program(1, program1, data),data:data});
-  if(stack1 || stack1 === 0) { buffer += stack1; }
-  buffer += "\n            <span class=\"label label-info\">";
+    + "\n            <span class=\"label label-";
+  if (helper = helpers.stateLabel) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.stateLabel); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.stateString) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.stateString); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n            <span class=\"label label-info\">";
   if (helper = helpers.duration) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.duration); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -38629,13 +38623,23 @@ module.exports = ItemView.extend({
 
 	templateHelpers: function() {
 		var self = this;
+		var state = {};
+		if (self.model.isActive()) {
+			state.string = "ACTIVE";
+			state.label = "success";
+		} else if (self.model.isIdle()) {
+			state.string = "IDLE";
+			state.label = "warning";
+		} else {
+			state.string = "CLOSED";
+			state.label = "danger";
+		}
 		return {
-			active: function() {
-				return self.model.isActive();
-			},
+			stateString: state.string,
+			stateLabel: state.label,
 			duration: function(){
 				var duration;
-				if (self.model.isActive()) {
+				if (self.model.isActive() || self.model.isIdle()) {
 					duration = this.lastSeen - this.startTime;
 				} else {
 					duration = this.endTime - this.startTime;
@@ -38685,19 +38689,21 @@ var Model = require('./../common/socketModel.js');
 module.exports = Model.extend({
 	urlRoot: 'session',
 
-	defaults: {
-//		active: false
-	},
-
 	parse : function(data) {
 		data.id = data.id || data.clientTime;
-//		data.active = !data.endTime;
-
 		return data;
 	},
 
 	isActive: function() {
-		return !this.get('endTime');
+		return !this.isClosed() && !this.isIdle();
+	},
+
+	isIdle: function() {
+		return (this.get('lastSeen') - this.get('lastIdle') > (5*60*1000));
+	},
+
+	isClosed: function() {
+		return !!this.get('endTime');
 	}
 });
 
