@@ -52,7 +52,7 @@ class SessionManager extends EventEmitter
 			.then (data)=>
 				# add the reconnect event
 				data.reconnect = [] if !data.reconnect
-				data.reconnect.push [ data.lastSeen, +new Date() ]
+				data.reconnect.push [ data.lastSeen || +new Date(), +new Date() ]
 
 				@sessions[sessID] = data
 			.finally =>

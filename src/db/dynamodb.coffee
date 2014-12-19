@@ -12,6 +12,7 @@ AWS.config.update({region: config.region});
 
 class DynamoDB extends AbstractDatabase
 	_generatingTables: {}
+	_knownTables: {}
 	constructor: ->
 		console.log "Hey look, dynamo did its init thing..."
 
@@ -25,51 +26,24 @@ class DynamoDB extends AbstractDatabase
 		# once gone, recreate
 		@dynamo.waitFor 'tableNotExists', { TableName: 'swiffer_events' }, @createEventTable
 
-	createEventTable: =>
-		console.log 'Trying to create a table!'
-		@dynamo.createTable {
-			TableName: 'swiffer_events'
-			AttributeDefinitions: [{
-				AttributeName: 'id'
-				AttributeType: 'S'
-			}, {
-				AttributeName: 'name'
-				AttributeType: 'S'
-			}]
-			KeySchema: [{
-				AttributeName: 'id'
-				KeyType: 'HASH'
-			}]
-			GlobalSecondaryIndexes: [{
-				IndexName: 'name-range'
-				KeySchema: [{
-					AttributeName: 'name'
-					KeyType: 'HASH'
-				}]
-				Projection: {
-					ProjectionType: 'KEYS_ONLY'
-				}
-				ProvisionedThroughput: {
-					ReadCapacityUnits: 5
-					WriteCapacityUnits: 5
-				}
-
-			}]
-			ProvisionedThroughput: {
-				ReadCapacityUnits: 5
-				WriteCapacityUnits: 5
-			}
-		}, ->
-			console.log 'Table create!'
-			console.log arguments
-
 	checkTable: (table, isList)->
+		if @_knownTables[table]
+			return @_knownTables[table]
+
 		deferr = Q.defer()
-		@dynamo.waitFor 'tableExists', { TableName: 'swiffer_#{table}' }, =>
-			@_generatingTables[table] = false
-			deferr.resolve()
-		@dynamo.waitFor 'tableNotExists', { TableName: 'swiffer_#{table}' }, =>
-			@generateTable table, isList
+		@_knownTables[table] = deferr.promise
+
+		@dynamo.describeTable { TableName: "swiffer_#{table}" }, (err, data)=>
+			if err == null
+				return deferr.resolve()
+
+			console.log err
+			if err.code == "ResourceNotFoundException"
+				@generateTable table, isList
+				@dynamo.waitFor 'tableExists', { TableName: "swiffer_#{table}" }, =>
+					@_generatingTables[table] = false
+					console.log "#{table} definitely exists."
+					deferr.resolve()
 
 		deferr.promise
 
@@ -111,7 +85,7 @@ class DynamoDB extends AbstractDatabase
 		schema.TableName = "swiffer_#{table}"
 
 		@dynamo.createTable schema, ->
-			console.log "Table has been created!"
+			console.log "Table has been created! swiffer_#{table}"
 		
 
 	put: (table, id, data, isList)=>
@@ -150,7 +124,17 @@ class DynamoDB extends AbstractDatabase
 
 	# right
 	pushList: (table, bucket, value)->
-		return @put table, bucket, value, true
+		deferr = Q.defer()
+
+		@checkTable(table, true).then =>
+			data.bucket = ""+bucket
+
+			@client.putItem {
+				TableName: "swiffer_#{table}"
+				Item: data
+			}, @createCallback deferr
+
+		deferr.promise
 
 	popList: (table, bucket, id)->
 		return @get table, bucket, id, true
@@ -163,12 +147,16 @@ class DynamoDB extends AbstractDatabase
 		@popList table, bucket, id
 
 	getList: (table, bucket)->
-		params
+		deferr = Q.defer()
+
+		params =
 			TableName: "swiffer_#{table}"
 			KeyConditions: [
-				@client.Condition "bucket", "EQ", bucket
+				@client.Condition "bucket", "EQ", bucket, null
+			]
+		@client.query params, @createCallback deferr
 
-		@client.query(params, pfunc);
+		deferr.promise
 
 	setList: (table, bucket, list)->
 		unimplemented()
@@ -176,6 +164,7 @@ class DynamoDB extends AbstractDatabase
 	# utility
 	createCallback: (deferr)->
 		return (err, data)->
+			console.log arguments
 			if err
 				deferr.reject err
 			else
