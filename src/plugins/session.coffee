@@ -94,7 +94,7 @@ class SessionManager extends EventEmitter
 								.value()
 			.finally =>
 				@swiffer.db.put 'sessions', sessID, sess
-				@emitEvent "#{sessID}:update", sess
+				@emitEvent 'update', sess
 
 
 		@storeSession sessID
@@ -112,7 +112,7 @@ class SessionManager extends EventEmitter
 
 		@storeSession sessID
 		if !silent
-			@emitEvent "#{sessID}:update", @sessions[sessID]
+			@emitEvent 'update', @sessions[sessID]
 
 
 	storeSession: (sessID, data)=>
