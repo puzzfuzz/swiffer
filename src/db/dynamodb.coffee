@@ -152,7 +152,7 @@ class DynamoDB extends AbstractDatabase
 		params =
 			TableName: "swiffer_#{table}"
 			KeyConditions: [
-				@client.Condition "bucket", "EQ", bucket, null
+				@client.Condition "bucket", "EQ", ""+bucket
 			]
 		@client.query params, @createCallback deferr
 
