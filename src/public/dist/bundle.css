@@ -9369,6 +9369,21 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
       -ms-transform: translateX(0);
           transform: translateX(0);
 }
+.session__item {
+  -webkit-transform: translateX(1999px);
+      -ms-transform: translateX(1999px);
+          transform: translateX(1999px);
+  -webkit-transition: all 0.3s ease-in;
+          transition: all 0.3s ease-in;
+}
+.session__item.added {
+  -webkit-transform: translateX(0);
+      -ms-transform: translateX(0);
+          transform: translateX(0);
+}
+.session__item .duration-label {
+  margin-right: 10px;
+}
 html,
 body,
 .application {

@@ -56,4 +56,10 @@ app.module('exceptions', {
 	container: app.layout.content
 });
 
+app.module('sessions', {
+	moduleClass: require('src/sessions/module'),
+	container: app.layout.content
+});
+
+
 Backbone.history.start();

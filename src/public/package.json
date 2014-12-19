@@ -79,7 +79,8 @@
     "lodash": "^2.4.1",
     "nprogress": "^0.1.6",
     "backbone.iobind": "~0.4.9",
-    "socket.io-client": "~1.2.1"
+    "socket.io-client": "~1.2.1",
+    "moment": "~2.8.4"
   },
   "browser": {
     "bootstrap": "./node_modules/bootstrap/dist/js/bootstrap.js",
