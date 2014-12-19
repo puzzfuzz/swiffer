@@ -10,6 +10,24 @@ class SessionManager extends EventEmitter
 		@sessions = {}
 		@router = express.Router()
 
+		@swiffer.db.list 'sessions'
+			.then (sessions)=>
+				now = +new Date()
+				console.log now
+				_(sessions)
+					.chain()
+					.filter (s)->
+						if s.endTime
+							return false
+						if now - s.lastSeen < (10 * 60 * 1000)
+							return false
+						return true
+					.each (s)=>
+						console.log 'Reopening stale session so that we can close it...'
+						sessID = s.id
+						@sessions[sessID] = s
+						@endSession sessID
+
 		@router.post '/poll', (req, res, next)=>
 			# reply right away
 			res.status(200).json({ error: null })

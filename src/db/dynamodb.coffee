@@ -109,7 +109,7 @@ class DynamoDB extends AbstractDatabase
 				TableName: "swiffer_#{table}"
 				Key: 
 					id: ""+id
-			}, @createCallback deferr
+			}, @createCallback deferr, true
 
 		deferr.promise
 
@@ -118,7 +118,7 @@ class DynamoDB extends AbstractDatabase
 
 		@client.scan {
 			TableName: "swiffer_#{table}"
-		}, @createCallback deferr
+		}, @createCallback deferr, true
 
 		deferr.promise
 
@@ -155,7 +155,7 @@ class DynamoDB extends AbstractDatabase
 			KeyConditions: [
 				@client.Condition "bucket", "EQ", ""+bucket
 			]
-		@client.query params, @createCallback deferr
+		@client.query params, @createCallback deferr, true
 
 		deferr.promise
 
@@ -163,11 +163,13 @@ class DynamoDB extends AbstractDatabase
 		unimplemented()
 
 	# utility
-	createCallback: (deferr)->
+	createCallback: (deferr, isGetter)->
 		return (err, data)->
 			if err
 				deferr.reject err
 			else
+				if isGetter && _(data).keys().length == 0
+					return deferr.reject {message: "Not found"}
 				if data.Item
 					data = data.Item
 				else if data.Items
