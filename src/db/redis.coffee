@@ -31,33 +31,33 @@ class RedisDatabase extends AbstractDatabase
 		deferr.promise
 
 
-	pushList: (table, value)->
+	pushList: (table, bucket, value)->
 		deferr = Q.defer()
-		@client.rpush table, JSON.stringify(value), @createCallback(deferr)
+		@client.rpush "#{table}:#{bucket}", JSON.stringify(value), @createCallback(deferr)
 
 		deferr.promise
 
-	popList: (table)->
+	popList: (table, bucket)->
 		deferr = Q.defer()
-		@client.rpop table, @createCallback(deferr)
+		@client.rpop "#{table}:#{bucket}", @createCallback(deferr)
 
 		deferr.promise
 
-	unshiftList: (table, value)->
+	unshiftList: (table, bucket, value)->
 		deferr = Q.defer()
-		@client.lpop table, JSON.stringify(value), @createCallback(deferr)
+		@client.lpop "#{table}:#{bucket}", JSON.stringify(value), @createCallback(deferr)
 
 		deferr.promise
 
-	shiftList: (table)->
+	shiftList: (table, bucket)->
 		deferr = Q.defer()
-		@client.lpush table, @createCallback(deferr)
+		@client.lpush "#{table}:#{bucket}", @createCallback(deferr)
 
 		deferr.promise
 
-	getList: (table)->
+	getList: (table, bucket)->
 		deferr = Q.defer()
-		@client.lrange table, 0, -1, @createCallback(deferr, (data)->
+		@client.lrange "#{table}:#{bucket}", 0, -1, @createCallback(deferr, (data)->
 				_(data).map (d)-> 
 					d = JSON.parse d if d != "[object Object]"
 					d

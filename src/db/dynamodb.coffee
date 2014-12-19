@@ -63,17 +63,17 @@ class DynamoDB extends AbstractDatabase
 			console.log 'Table create!'
 			console.log arguments
 
-	checkTable: (table)->
+	checkTable: (table, isList)->
 		deferr = Q.defer()
 		@dynamo.waitFor 'tableExists', { TableName: 'swiffer_#{table}' }, =>
 			@_generatingTables[table] = false
 			deferr.resolve()
 		@dynamo.waitFor 'tableNotExists', { TableName: 'swiffer_#{table}' }, =>
-			deferr.reject()
+			@generateTable table, isList
 
 		deferr.promise
 
-	generateTable: (table)->
+	generateTable: (table, isList)->
 		if @_generatingTables[table]
 			return
 
@@ -90,9 +90,23 @@ class DynamoDB extends AbstractDatabase
 					AttributeName: 'id'
 					KeyType: 'HASH'
 				}]
-				ProvisionedThroughput:
-					ReadCapacityUnits: 5
-					WriteCapacityUnits: 5
+			if isList
+				schema.AttributeDefinitions.push
+					AttributeName: 'bucket'
+					AttributeType: 'S'
+				schema.KeySchema = [{
+					AttributeName: 'bucket'
+					KeyType: 'HASH'
+				}, {
+					AttributeName: 'id'
+					KeyType: 'RANGE'
+				}]
+
+
+		if !schema.ProvisionedThroughput
+			schema.ProvisionedThroughput =
+				ReadCapacityUnits: 5
+				WriteCapacityUnits: 5
 		
 		schema.TableName = "swiffer_#{table}"
 
@@ -100,10 +114,10 @@ class DynamoDB extends AbstractDatabase
 			console.log "Table has been created!"
 		
 
-	put: (table, id, data)=>
+	put: (table, id, data, isList)=>
 		deferr = Q.defer()
 
-		@checkTable(table).then =>
+		@checkTable(table, isList).then =>
 			data.id = ""+id
 
 			@client.putItem {
@@ -113,10 +127,10 @@ class DynamoDB extends AbstractDatabase
 
 		deferr.promise
 
-	get: (table, id)->
+	get: (table, id, isList)->
 		deferr = Q.defer()
 
-		@checkTable(table).then =>
+		@checkTable(table, isList).then =>
 			@client.getItem {
 				TableName: "swiffer_#{table}"
 				Key: 
@@ -133,6 +147,31 @@ class DynamoDB extends AbstractDatabase
 		}, @createCallback deferr
 
 		deferr.promise
+
+	# right
+	pushList: (table, bucket, value)->
+		return @put table, bucket, value, true
+
+	popList: (table, bucket, id)->
+		return @get table, bucket, id, true
+
+	# left
+	unshiftList: (table, bucket, value)->
+		@pushList table, bucket, value
+
+	shiftList: (table, bucket, id)->
+		@popList table, bucket, id
+
+	getList: (table, bucket)->
+		params
+			TableName: "swiffer_#{table}"
+			KeyConditions: [
+				@client.Condition "bucket", "EQ", bucket
+
+		@client.query(params, pfunc);
+
+	setList: (table, bucket, list)->
+		unimplemented()
 
 	# utility
 	createCallback: (deferr)->

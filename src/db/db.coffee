@@ -26,22 +26,22 @@ class AbstractDatabase
 
 		deferr.promise
 
-	pushList: (table, value)->
+	pushList: (table, bucket, value)->
 		unimplemented()
 
-	popList: (table)->
+	popList: (table, bucket)->
 		unimplemented()
 
-	unshiftList: (table, value)->
+	unshiftList: (table, bucket, value)->
 		unimplemented()
 
-	shiftList: (table)->
+	shiftList: (table, bucket)->
 		unimplemented()
 
-	getList: (table)->
+	getList: (table, bucket)->
 		unimplemented()
 
-	setList: (table, list)->
+	setList: (table, bucket, list)->
 		unimplemented()
 
 	close: ->
