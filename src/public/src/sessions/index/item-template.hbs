@@ -9,4 +9,11 @@
 </div>
 <div class="panel-body">
     TODO: session info
+    <div class="event-list">
+    {{#each sessionEvents}}
+        <div class="event-wrap">
+            <label class="label {{type}}">{{event}}</label>
+        </div>
+    {{/each}}
+    </div>
 </div>

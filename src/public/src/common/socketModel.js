@@ -15,7 +15,11 @@ module.exports = Model.extend({
 		if (!this.noIoBind) {
 			this.ioBind('update', window.socket, this.serverChange, this);
 			this.ioBind('delete', window.socket, this.serverDelete, this);
+			this.bindCustom();
 		}
+	},
+	bindCustom: function() {
+		//overwrite me w/ custom event bindings for this model
 	},
 	serverChange: function (data) {
 		// Useful to prevent loops when dealing with client-side updates (ie: forms).

@@ -6,8 +6,16 @@
       transform: translateX(0);
     }
 
-    .duration-label {
-      margin-right: 10px;
+    .event-list {
+      .exception {
+        &:extend(.label-danger);
+      }
+      .route {
+        &:extend(.label-primary);
+      }
+      .event {
+        &:extend(.label-success);
+      }
     }
   }
 

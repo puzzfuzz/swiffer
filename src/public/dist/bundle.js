@@ -8058,8 +8058,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
 (function (global){
 
 ; jQuery = global.jQuery = require("jquery");
@@ -37120,6 +37120,7 @@ module.exports = Marionette.LayoutView;
 },{"backbone.marionette":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/lib/core/backbone.marionette.js"}],"/Users/Chris/Dev/swiffer/src/public/src/common/model.js":[function(require,module,exports){
 var Backbone = require('backbone');
 var Radio = require('backbone.radio');
+var _ = require('lodash');
 
 var flashesChannel = Radio.channel('flashes');
 
@@ -37147,9 +37148,17 @@ module.exports = Backbone.Model.extend({
     delete this.serverError;
     delete this.validationError;
   },
+
+	//ensure change:attr gets triggered
+	pushToArray: function(attr, value) {
+		var t_array = _.clone(this.get(attr));
+		t_array.push(value);
+
+		this.set(attr, t_array);
+	}
 });
 
-},{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone.radio":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/build/backbone.radio.js"}],"/Users/Chris/Dev/swiffer/src/public/src/common/module.js":[function(require,module,exports){
+},{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone.radio":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/build/backbone.radio.js","lodash":"/Users/Chris/Dev/swiffer/src/public/node_modules/lodash/dist/lodash.js"}],"/Users/Chris/Dev/swiffer/src/public/src/common/module.js":[function(require,module,exports){
 var Marionette = require('backbone.marionette');
 var Backbone = require('backbone');
 
@@ -37284,11 +37293,18 @@ var Collection = require('./collection');
 var _ = require('lodash');
 
 module.exports = Collection.extend({
+	noIoBind: false,
 	socket:window.socket,
 	initialize: function () {
 		console.log('creating socket collection');
 		_.bindAll(this, 'serverCreate', 'collectionCleanup');
-		this.ioBind('create', window.socket, this.serverCreate, this);
+		if (!this.noIoBind) {
+			this.ioBind('create', window.socket, this.serverCreate, this);
+			this.bindCustom();
+		}
+	},
+	bindCustom: function() {
+		//overwrite me w/ custom event bindings for this model
 	},
 	serverCreate: function (data) {
 		console.log('model added to colleciton from server', data);
@@ -37328,7 +37344,11 @@ module.exports = Model.extend({
 		if (!this.noIoBind) {
 			this.ioBind('update', window.socket, this.serverChange, this);
 			this.ioBind('delete', window.socket, this.serverDelete, this);
+			this.bindCustom();
 		}
+	},
+	bindCustom: function() {
+		//overwrite me w/ custom event bindings for this model
 	},
 	serverChange: function (data) {
 		// Useful to prevent loops when dealing with client-side updates (ie: forms).
@@ -37547,7 +37567,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers.errorMessage) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.errorMessage); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\n            <button type=\"button\" class=\"btn btn-lg btn-danger pull-right\" data-toggle=\"collapse\" data-target=\"#trace_";
+    + "\n            <button type=\"button\" class=\"btn btn-danger pull-right\" data-toggle=\"collapse\" data-target=\"#trace_";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -38571,8 +38591,22 @@ var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
   this.compilerInfo = [4,'>= 1.0.0'];
 helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
-  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression, self=this;
 
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n        <div class=\"event-wrap\">\n            <label class=\"label ";
+  if (helper = helpers.type) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.type); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.event) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.event); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</label>\n        </div>\n    ";
+  return buffer;
+  }
 
   buffer += "<div class=\"panel-heading\">\n    <h4 class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            ";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
@@ -38590,7 +38624,10 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers.duration) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.duration); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\n        </div>\n    </h4>\n</div>\n<div class=\"panel-body\">\n    TODO: session info\n</div>";
+    + "</span>\n        </div>\n    </h4>\n</div>\n<div class=\"panel-body\">\n    TODO: session info\n    <div class=\"event-list\">\n    ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.sessionEvents), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n    </div>\n</div>";
   return buffer;
   });
 
@@ -38606,7 +38643,9 @@ module.exports = ItemView.extend({
 	className: 'session__item panel panel-default',
 
 	modelEvents: {
-		'change': 'render'
+		'change': 'render',
+		'route_added' : 'render',
+		'exception_added' : 'render',
 	},
 
 	onRender: function(){
@@ -38648,6 +38687,10 @@ module.exports = ItemView.extend({
 					return moment.duration(duration).humanize();
 				}
 				return "";
+			},
+			eventIsException: function(event) {
+				debugger;
+				return event.type === "exception";
 			}
 		}
 	}
@@ -38685,13 +38728,49 @@ module.exports = Route.extend({
 
 },{"./../../common/route.js":"/Users/Chris/Dev/swiffer/src/public/src/common/route.js","./composite-view":"/Users/Chris/Dev/swiffer/src/public/src/sessions/index/composite-view.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/model.js":[function(require,module,exports){
 var Model = require('./../common/socketModel.js');
+var _ = require('lodash');
 
 module.exports = Model.extend({
 	urlRoot: 'session',
 
+	defaults: {
+		sessionEvents: [],
+		routes: []
+	},
+
 	parse : function(data) {
 		data.id = data.id || data.clientTime;
+
+		data.sessionEvents = _(data.routes).map(function(route){
+			return {type:'route', event:route}
+		}).value();
+
 		return data;
+	},
+
+	//Socket.io events: session/<id>:<eventName>
+	bindCustom: function(){
+		this.ioBind('route', window.socket, this.serverRouteAdded, this);
+		this.ioBind('exception', window.socket, this.serverExceptionAdded, this);
+		this.ioBind('event', window.socket, this.serverEventAdded, this);
+	},
+
+	serverRouteAdded: function(route) {
+		console.log('route added');
+		this.trigger('route_added');
+		this.pushToArray('sessionEvents', {type:'route', event:route.route});
+	},
+
+	serverExceptionAdded: function(exception) {
+		console.log('exception added');
+		this.trigger('exception_added');
+		//ensure change:sessionEvents gets triggered
+		this.pushToArray('sessionEvents', {type:'exception', event:exception.errorMessage});
+	},
+
+	serverEventAdded: function(event) {
+		this.trigger('event_added');
+		this.pushToArray('sessionEvents', {type:'event', event:event});
 	},
 
 	isActive: function() {
@@ -38699,7 +38778,7 @@ module.exports = Model.extend({
 	},
 
 	isIdle: function() {
-		return (this.get('lastSeen') - this.get('lastIdle') > (5*60*1000));
+		return (this.get('lastSeen') - this.get('lastIdle')) > (5*60*1000);
 	},
 
 	isClosed: function() {
@@ -38707,7 +38786,7 @@ module.exports = Model.extend({
 	}
 });
 
-},{"./../common/socketModel.js":"/Users/Chris/Dev/swiffer/src/public/src/common/socketModel.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/module.js":[function(require,module,exports){
+},{"./../common/socketModel.js":"/Users/Chris/Dev/swiffer/src/public/src/common/socketModel.js","lodash":"/Users/Chris/Dev/swiffer/src/public/node_modules/lodash/dist/lodash.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/module.js":[function(require,module,exports){
 var Radio = require('backbone.radio');
 var Module = require('./../common/module.js');
 var Router = require('./router');

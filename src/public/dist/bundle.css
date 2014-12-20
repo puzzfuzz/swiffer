@@ -4489,14 +4489,16 @@ a.label:focus {
 .label-default[href]:focus {
   background-color: #5e5e5e;
 }
-.label-primary {
+.label-primary,
+.session__item .event-list .route {
   background-color: #337ab7;
 }
 .label-primary[href]:hover,
 .label-primary[href]:focus {
   background-color: #286090;
 }
-.label-success {
+.label-success,
+.session__item .event-list .event {
   background-color: #5cb85c;
 }
 .label-success[href]:hover,
@@ -4517,7 +4519,8 @@ a.label:focus {
 .label-warning[href]:focus {
   background-color: #ec971f;
 }
-.label-danger {
+.label-danger,
+.session__item .event-list .exception {
   background-color: #d9534f;
 }
 .label-danger[href]:hover,
@@ -9380,9 +9383,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
   -webkit-transform: translateX(0);
       -ms-transform: translateX(0);
           transform: translateX(0);
-}
-.session__item .duration-label {
-  margin-right: 10px;
 }
 html,
 body,

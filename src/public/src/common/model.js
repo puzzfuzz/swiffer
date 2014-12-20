@@ -1,5 +1,6 @@
 var Backbone = require('backbone');
 var Radio = require('backbone.radio');
+var _ = require('lodash');
 
 var flashesChannel = Radio.channel('flashes');
 
@@ -27,4 +28,12 @@ module.exports = Backbone.Model.extend({
     delete this.serverError;
     delete this.validationError;
   },
+
+	//ensure change:attr gets triggered
+	pushToArray: function(attr, value) {
+		var t_array = _.clone(this.get(attr));
+		t_array.push(value);
+
+		this.set(attr, t_array);
+	}
 });

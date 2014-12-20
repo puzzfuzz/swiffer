@@ -9,7 +9,9 @@ module.exports = ItemView.extend({
 	className: 'session__item panel panel-default',
 
 	modelEvents: {
-		'change': 'render'
+		'change': 'render',
+		'route_added' : 'render',
+		'exception_added' : 'render',
 	},
 
 	onRender: function(){
@@ -51,6 +53,10 @@ module.exports = ItemView.extend({
 					return moment.duration(duration).humanize();
 				}
 				return "";
+			},
+			eventIsException: function(event) {
+				debugger;
+				return event.type === "exception";
 			}
 		}
 	}
