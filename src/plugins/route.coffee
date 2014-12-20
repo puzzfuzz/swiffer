@@ -39,6 +39,14 @@ class RouterHandler
 		@events.emit 'io', data
 		@events.emit 'axon', data
 
+		#emit exception as a session event
+		data =
+			name: 'session/' + routes.session + ":route"
+			data: routes
+
+		@events.emit 'io', data
+
+
 		res.status(200).json({ error: null })
 
 

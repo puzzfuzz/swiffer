@@ -42,6 +42,13 @@ class ExceptionHandler
 		@events.emit 'io', data
 		@events.emit 'axon', data
 
+		#emit exception as a session event
+		data =
+			name: 'session/' + exception.session + ":exception"
+			data: exception
+
+		@events.emit 'io', data
+
 		next()
 
 	send: (req, res, next)=>
