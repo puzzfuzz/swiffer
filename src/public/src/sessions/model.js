@@ -41,7 +41,7 @@ module.exports = Model.extend({
 
 	serverEventAdded: function(event) {
 		this.trigger('event_added');
-		this.pushToArray('sessionEvents', {type:'event', event:event});
+		this.pushToArray('sessionEvents', {type:'event', event:event.name});
 	},
 
 	isActive: function() {

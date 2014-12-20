@@ -6,7 +6,10 @@
 
 	"restartTime": 5,
 	"modules": [
-		"exception"
+		"exception",
+		"route",
+        "session",
+        "event"
 	],
 
 	"database": "redis"
