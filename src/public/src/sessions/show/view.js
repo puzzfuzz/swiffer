@@ -1,12 +1,12 @@
 var ItemView = require('src/common/item-view');
-var template = require('./item-template.hbs');
+var template = require('./template.hbs');
 var _ = require('lodash');
 var moment = require('moment');
 
 module.exports = ItemView.extend({
 	tagName: 'div',
 	template: template,
-	className: 'session__item panel panel-default',
+	className: 'session session--show container',
 
 	modelEvents: {
 		'change': 'render',

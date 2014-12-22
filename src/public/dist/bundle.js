@@ -5959,8 +5959,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js":[function(require,module,exports){
 (function(root, factory) {
 
   if (typeof define === 'function' && define.amd) {
@@ -6446,8 +6446,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","jquery":"/Users/Chris/Dev/swiffer/src/public/node_modules/jquery/dist/jquery.js","underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js":[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -8058,8 +8058,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
 (function (global){
 
 ; jQuery = global.jQuery = require("jquery");
@@ -37563,19 +37563,15 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
 
 
-  buffer += "<div class=\"panel-heading\">\n    <h4 class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            ";
+  buffer += "<div class=\"panel-heading\">\n    <div class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            <div class=\"pull-left\">\n                <h4>\n                    ";
   if (helper = helpers.errorMessage) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.errorMessage); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\n            <button type=\"button\" class=\"btn btn-danger pull-right\" data-toggle=\"collapse\" data-target=\"#trace_";
+    + "\n                </h4>\n                <div>\n                    <span class=\"label label-xs label-default\">";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\">Stack</button>\n        </div>\n    </h4>\n</div>\n<div class=\"panel-body\">\n    <div>\n        <span>id:</span><span class=\"label label-default\">";
-  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
-  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
-  buffer += escapeExpression(stack1)
-    + "</span>\n        <span>user:</span><span class=\"label label-default\">";
+    + "</span>\n                    <span class=\"label label-xs label-default\">";
   if (helper = helpers.userName) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.userName); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -37583,7 +37579,19 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers.user) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.user); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\n    </div>\n    <br/>\n    <pre id=\"trace_";
+    + "</span>\n                </div>\n            </div>\n            <button type=\"button\" class=\"btn btn-danger pull-right\" data-toggle=\"collapse\" data-target=\"#trace_";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">Stack</button>\n        </div>\n    </div>\n</div>\n<div class=\"panel-body\">\n    <p>\n        <span>session:</span><a class=\"label label-primary\" href=\"#sessions/";
+  if (helper = helpers.session) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.session); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.session) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.session); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</a>\n    </p>\n    <pre id=\"trace_";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -38608,11 +38616,15 @@ function program1(depth0,data) {
   return buffer;
   }
 
-  buffer += "<div class=\"panel-heading\">\n    <h4 class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            ";
+  buffer += "<div class=\"panel-heading\">\n    <h4 class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            <a class=\"label label-primary\" href=\"#sessions/";
   if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "\n            <span class=\"label label-";
+    + "\">";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</a>\n            <span class=\"label label-";
   if (helper = helpers.stateLabel) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.stateLabel); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
@@ -38687,10 +38699,6 @@ module.exports = ItemView.extend({
 					return moment.duration(duration).humanize();
 				}
 				return "";
-			},
-			eventIsException: function(event) {
-				debugger;
-				return event.type === "exception";
 			}
 		}
 	}
@@ -38810,6 +38818,7 @@ var Radio = require('backbone.radio');
 
 var Collection  = require('./collection');
 var IndexRoute  = require('./index/route');
+var ShowRoute  = require('./show/route');
 
 module.exports = Router.extend({
 	initialize: function(options) {
@@ -38822,7 +38831,8 @@ module.exports = Router.extend({
 	},
 
 	routes: {
-		'sessions'        : 'index'
+		'sessions'        : 'index',
+		'sessions/:id'     : 'show'
 	},
 
 	index: function() {
@@ -38830,10 +38840,153 @@ module.exports = Router.extend({
 			container  : this.container,
 			collection : this.collection
 		});
+	},
+
+	show: function() {
+		return new ShowRoute({
+			container  : this.container,
+			collection : this.collection
+		});
 	}
 });
 
-},{"./../common/router.js":"/Users/Chris/Dev/swiffer/src/public/src/common/router.js","./collection":"/Users/Chris/Dev/swiffer/src/public/src/sessions/collection.js","./index/route":"/Users/Chris/Dev/swiffer/src/public/src/sessions/index/route.js","backbone.radio":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/build/backbone.radio.js"}]},{},["./src/main.js"])
+},{"./../common/router.js":"/Users/Chris/Dev/swiffer/src/public/src/common/router.js","./collection":"/Users/Chris/Dev/swiffer/src/public/src/sessions/collection.js","./index/route":"/Users/Chris/Dev/swiffer/src/public/src/sessions/index/route.js","./show/route":"/Users/Chris/Dev/swiffer/src/public/src/sessions/show/route.js","backbone.radio":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/build/backbone.radio.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/show/route.js":[function(require,module,exports){
+var Route = require('./../../common/route.js');
+var Model = require('../model');
+var View = require('./view');
+
+module.exports = Route.extend({
+	initialize: function(options) {
+		this.container = options.container;
+		this.collection = options.collection;
+	},
+
+	fetch: function(id) {
+		if (this.collection.isNew()) {
+			this.model = new Model({ id: id });
+			return this.model.fetch();
+		} else {
+			this.model = this.collection.get(id);
+		}
+	},
+
+	render: function() {
+		this.view = new View({
+			model: this.model
+		});
+		this.container.show(this.view);
+	}
+});
+
+},{"../model":"/Users/Chris/Dev/swiffer/src/public/src/sessions/model.js","./../../common/route.js":"/Users/Chris/Dev/swiffer/src/public/src/common/route.js","./view":"/Users/Chris/Dev/swiffer/src/public/src/sessions/show/view.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/show/template.hbs":[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1, helper;
+  buffer += "\n                <div class=\"event-wrap\">\n                    <label class=\"label ";
+  if (helper = helpers.type) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.type); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.event) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.event); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</label>\n                </div>\n            ";
+  return buffer;
+  }
+
+  buffer += "<div class=\"page-header\">\n    <h1>Session: ";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</h1>\n</div>\n\n<div class=\"session__item panel panel-default added\">\n    <div class=\"panel-heading\">\n        <h4 class=\"list-group-item-heading\">\n            <div class=\"clearfix\">\n                <span class=\"label label-";
+  if (helper = helpers.stateLabel) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.stateLabel); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.stateString) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.stateString); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n                <span class=\"label label-info\">";
+  if (helper = helpers.duration) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.duration); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n            </div>\n        </h4>\n    </div>\n    <div class=\"panel-body\">\n        <div class=\"event-list\">\n            ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.sessionEvents), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n        </div>\n    </div>\n</div>";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":"/Users/Chris/Dev/swiffer/src/public/node_modules/hbsfy/runtime.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/show/view.js":[function(require,module,exports){
+var ItemView = require('./../../common/item-view.js');
+var template = require('./template.hbs');
+var _ = require('lodash');
+var moment = require('moment');
+
+module.exports = ItemView.extend({
+	tagName: 'div',
+	template: template,
+	className: 'session session--show container',
+
+	modelEvents: {
+		'change': 'render',
+		'route_added' : 'render',
+		'exception_added' : 'render',
+	},
+
+	onRender: function(){
+		if (this.model.get('__isNew')) {
+			this.model.set({'__isNew':false},{silent:true});
+		}
+	},
+
+	onAttach: function() {
+		var self = this,
+			timeout = (this.model.collection ? this.model.collection.indexOf(this.model) : 0) * 150;
+		_.delay(function(){self.$el.addClass('added');}, timeout);
+	},
+
+	templateHelpers: function() {
+		var self = this;
+		var state = {};
+		if (self.model.isActive()) {
+			state.string = "ACTIVE";
+			state.label = "success";
+		} else if (self.model.isIdle()) {
+			state.string = "IDLE";
+			state.label = "warning";
+		} else {
+			state.string = "CLOSED";
+			state.label = "danger";
+		}
+		return {
+			stateString: state.string,
+			stateLabel: state.label,
+			duration: function(){
+				var duration;
+				if (self.model.isActive() || self.model.isIdle()) {
+					duration = this.lastSeen - this.startTime;
+				} else {
+					duration = this.endTime - this.startTime;
+				}
+				if (duration) {
+					return moment.duration(duration).humanize();
+				}
+				return "";
+			}
+		}
+	}
+
+});
+
+},{"./../../common/item-view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/item-view.js","./template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/sessions/show/template.hbs","lodash":"/Users/Chris/Dev/swiffer/src/public/node_modules/lodash/dist/lodash.js","moment":"/Users/Chris/Dev/swiffer/src/public/node_modules/moment/moment.js"}]},{},["./src/main.js"])
 
 
 //# sourceMappingURL=bundle.js.map
