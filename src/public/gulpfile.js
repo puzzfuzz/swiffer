@@ -28,9 +28,9 @@ gulp.task('html', function() {
 });
 
 gulp.task('client', function() {
-	return gulp.src('./src/swiffer.js')
+	return gulp.src('./src/js/swiffer.js')
 		.pipe($.plumber())
-		.pipe(gulp.dest('./dist'));
+		.pipe(gulp.dest('./dist/js'));
 });
 
 gulp.task('styles', function() {
