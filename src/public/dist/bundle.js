@@ -52,6 +52,11 @@ app.module('index', {
 //  container: app.layout.content
 //});
 
+app.module('issues', {
+	moduleClass: require('./issues/module.js'),
+	container: app.layout.content
+});
+
 app.module('exceptions', {
 	moduleClass: require('./exceptions/module.js'),
 	container: app.layout.content
@@ -65,7 +70,7 @@ app.module('sessions', {
 
 Backbone.history.start();
 
-},{"./application/application.js":"/Users/Chris/Dev/swiffer/src/public/src/application/application.js","./exceptions/module.js":"/Users/Chris/Dev/swiffer/src/public/src/exceptions/module.js","./flashes/module.js":"/Users/Chris/Dev/swiffer/src/public/src/flashes/module.js","./header/module.js":"/Users/Chris/Dev/swiffer/src/public/src/header/module.js","./index/module.js":"/Users/Chris/Dev/swiffer/src/public/src/index/module.js","./modal/module.js":"/Users/Chris/Dev/swiffer/src/public/src/modal/module.js","./plugins":"/Users/Chris/Dev/swiffer/src/public/src/plugins.js","./sessions/module.js":"/Users/Chris/Dev/swiffer/src/public/src/sessions/module.js","backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone.marionette":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/lib/core/backbone.marionette.js"}],"/Users/Chris/Dev/swiffer/node_modules/underscore/underscore.js":[function(require,module,exports){
+},{"./application/application.js":"/Users/Chris/Dev/swiffer/src/public/src/application/application.js","./exceptions/module.js":"/Users/Chris/Dev/swiffer/src/public/src/exceptions/module.js","./flashes/module.js":"/Users/Chris/Dev/swiffer/src/public/src/flashes/module.js","./header/module.js":"/Users/Chris/Dev/swiffer/src/public/src/header/module.js","./index/module.js":"/Users/Chris/Dev/swiffer/src/public/src/index/module.js","./issues/module.js":"/Users/Chris/Dev/swiffer/src/public/src/issues/module.js","./modal/module.js":"/Users/Chris/Dev/swiffer/src/public/src/modal/module.js","./plugins":"/Users/Chris/Dev/swiffer/src/public/src/plugins.js","./sessions/module.js":"/Users/Chris/Dev/swiffer/src/public/src/sessions/module.js","backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone.marionette":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/lib/core/backbone.marionette.js"}],"/Users/Chris/Dev/swiffer/node_modules/underscore/underscore.js":[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -37483,7 +37488,7 @@ var template = require('./composite-template.hbs');
 
 module.exports = CompositeView.extend({
 	template: template,
-	className: 'exception exception--index container',
+	className: 'exceptions exceptions--index container',
 
 	initialize: function(options) {
 		this.models = options.collection.models;
@@ -38104,7 +38109,283 @@ module.exports = View.extend({
   className: 'index'
 });
 
-},{"./../common/view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/view.js","./template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/index/template.hbs"}],"/Users/Chris/Dev/swiffer/src/public/src/modal/alert/template.hbs":[function(require,module,exports){
+},{"./../common/view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/view.js","./template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/index/template.hbs"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/collection.js":[function(require,module,exports){
+var Collection = require('./../common/socketCollection.js');
+var Model = require('./model');
+
+module.exports = Collection.extend({
+	url: 'issue',
+	model: Model,
+
+	comparator: function(model) {
+		return -model.get("recent"); //most recent issues first
+	}
+});
+},{"./../common/socketCollection.js":"/Users/Chris/Dev/swiffer/src/public/src/common/socketCollection.js","./model":"/Users/Chris/Dev/swiffer/src/public/src/issues/model.js"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/index/composite-template.hbs":[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"page-header\">\n    <h1>Issues:</h1>\n</div>\n\n<div class=\"new-item\"></div>\n<div class=\"list-group\"></div>\n";
+  });
+
+},{"hbsfy/runtime":"/Users/Chris/Dev/swiffer/src/public/node_modules/hbsfy/runtime.js"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/index/composite-view.js":[function(require,module,exports){
+var _ = require('lodash');
+var CompositeView = require('./../../common/composite-view.js');
+var Collection = require('./../../common/collection.js');
+var ItemView = require('./item-view');
+var template = require('./composite-template.hbs');
+
+module.exports = CompositeView.extend({
+	template: template,
+	className: 'issues issues--index container',
+
+	initialize: function(options) {
+		this.models = options.collection.models;
+	},
+
+	childView: ItemView,
+	childViewContainer: 'div.list-group',
+
+//	collectionEvents: {
+//		'change': 'render',
+//		'before:add': 'onBeforeItemAdded'
+//	},
+
+	onBeforeRender: function() {
+		//animate new issues being added to the top of the list, only after initial render
+		this.onBeforeAddChild = function(){};
+	},
+
+	onRender: function(){
+		//animate new issues being added to the top of the list, only after initial render
+		this.onBeforeAddChild = this.newIssueAdded;
+	},
+
+	newIssueAdded: function(issueView) {
+		this.$childViewContainer.prepend(issueView.$el);
+		issueView.onAttach();
+	},
+
+	templateHelpers: function() {
+
+	}
+});
+
+},{"./../../common/collection.js":"/Users/Chris/Dev/swiffer/src/public/src/common/collection.js","./../../common/composite-view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/composite-view.js","./composite-template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/issues/index/composite-template.hbs","./item-view":"/Users/Chris/Dev/swiffer/src/public/src/issues/index/item-view.js","lodash":"/Users/Chris/Dev/swiffer/src/public/node_modules/lodash/dist/lodash.js"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/index/item-template.hbs":[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression, self=this;
+
+function program1(depth0,data) {
+  
+  var buffer = "", stack1;
+  buffer += "\n        <span class=\"label label-info\">"
+    + escapeExpression(((stack1 = (depth0 && depth0.userName)),typeof stack1 === functionType ? stack1.apply(depth0) : stack1))
+    + "</span>\n    ";
+  return buffer;
+  }
+
+  buffer += "<div class=\"panel-heading\">\n    <div class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            <div class=\"pull-left\">\n                <h4>\n                    ";
+  if (helper = helpers.message) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.message); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\n                </h4>\n                <div>\n                    <span class=\"label label-primary\">";
+  if (helper = helpers.lastSeen) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.lastSeen); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n                    <!--<span class=\"label label-xs label-default\">";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>-->\n                </div>\n            </div>\n            <button type=\"button\" class=\"btn btn-danger pull-right\" data-toggle=\"collapse\" data-target=\"#exceptions_";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.exceptionCount) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.exceptionCount); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</button>\n            <button type=\"button\" class=\"btn btn-info pull-right\" data-toggle=\"collapse\" data-target=\"#users_";
+  if (helper = helpers.id) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.id); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (helper = helpers.userCount) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.userCount); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</button>\n        </div>\n    </div>\n</div>\n<div class=\"panel-body\">\n    Affected users:\n    ";
+  stack1 = helpers.each.call(depth0, (depth0 && depth0.users), {hash:{},inverse:self.noop,fn:self.program(1, program1, data),data:data});
+  if(stack1 || stack1 === 0) { buffer += stack1; }
+  buffer += "\n</div>\n\n";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":"/Users/Chris/Dev/swiffer/src/public/node_modules/hbsfy/runtime.js"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/index/item-view.js":[function(require,module,exports){
+var ItemView = require('./../../common/item-view.js');
+var template = require('./item-template.hbs');
+var _ = require('lodash');
+var moment = require('moment');
+
+module.exports = ItemView.extend({
+	tagName: 'div',
+	template: template,
+	className: 'issues__item panel panel-default',
+
+	modelEvents: {
+		'all': 'render'
+	},
+
+	onRender: function(){
+		if (this.model.get('__isNew')) {
+			this.model.set({'__isNew':false},{silent:true});
+		}
+	},
+
+	onAttach: function() {
+		var self = this,
+			timeout = (this.model.collection ? this.model.collection.indexOf(this.model) : 0) * 150;
+		_.delay(function(){self.$el.addClass('added');}, timeout);
+		console.log('onAttach called');
+	},
+
+	templateHelpers: function() {
+		var exceptions = this.model.get('exceptions'),
+			exceptionCount = exceptions.length,
+			lastSeen = moment(this.model.get('recent')).format('MM/DD/YYYY HH:mm:ss.SSS'),
+			users = _(exceptions).chain()
+				.groupBy(function(ex){
+					return ex.user || ex.userName;
+				})
+				.map(function(ex){
+					//group by returns array of exceptions per user,
+					// but we just want the unique user so pull the first dude form the list
+					var ex = ex[0];
+					return {
+						user: ex.user,
+						userName: ex.userName
+					}
+				})
+				.value(),
+			userCount = users.length;
+
+
+		return {
+			exceptions: exceptions,
+			exceptionCount: exceptionCount,
+			lastSeen: lastSeen,
+			users: users,
+			userCount: userCount
+		}
+
+	}
+
+});
+
+},{"./../../common/item-view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/item-view.js","./item-template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/issues/index/item-template.hbs","lodash":"/Users/Chris/Dev/swiffer/src/public/node_modules/lodash/dist/lodash.js","moment":"/Users/Chris/Dev/swiffer/src/public/node_modules/moment/moment.js"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/index/route.js":[function(require,module,exports){
+var Route = require('./../../common/route.js');
+var View = require('./composite-view');
+
+module.exports = Route.extend({
+	initialize: function(options) {
+		this.container = options.container;
+		this.collection = options.collection;
+	},
+
+	fetch: function() {
+		if (this.collection.isNew()) {
+			return this.collection.fetch();
+		}
+	},
+
+	render: function(params) {
+		this.view = new View({
+			collection: this.collection
+		});
+
+		this.container.show(this.view);
+	}
+});
+
+},{"./../../common/route.js":"/Users/Chris/Dev/swiffer/src/public/src/common/route.js","./composite-view":"/Users/Chris/Dev/swiffer/src/public/src/issues/index/composite-view.js"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/model.js":[function(require,module,exports){
+var Model = require('./../common/socketModel.js');
+
+module.exports = Model.extend({
+	urlRoot: 'issue',
+
+	defaults: {
+		active: false
+	},
+
+	parse : function(data) {
+		data.id = data.id || data.message.hashCode();
+		return data;
+	}
+});
+
+},{"./../common/socketModel.js":"/Users/Chris/Dev/swiffer/src/public/src/common/socketModel.js"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/module.js":[function(require,module,exports){
+var Radio = require('backbone.radio');
+var Module = require('./../common/module.js');
+var Router = require('./router');
+
+module.exports = Module.extend({
+	initialize: function() {
+		this.router = new Router(this.options);
+
+		Radio.command('header', 'add', {
+			name: 'Issues',
+			path: 'issues',
+			type: 'primary'
+		});
+	}
+});
+
+},{"./../common/module.js":"/Users/Chris/Dev/swiffer/src/public/src/common/module.js","./router":"/Users/Chris/Dev/swiffer/src/public/src/issues/router.js","backbone.radio":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/build/backbone.radio.js"}],"/Users/Chris/Dev/swiffer/src/public/src/issues/router.js":[function(require,module,exports){
+var Router = require('./../common/router.js');
+var Radio = require('backbone.radio');
+
+var Collection  = require('./collection');
+var IndexRoute  = require('./index/route');
+//var ShowRoute   = require('./show/route');
+
+module.exports = Router.extend({
+	initialize: function(options) {
+		this.container = options.container;
+		this.collection = new Collection();
+	},
+
+	onBeforeEnter: function() {
+		Radio.command('header', 'activate', { path: 'issues' });
+	},
+
+	routes: {
+		'issues'        : 'index',
+//		'issues/:id'    : 'show'
+	},
+
+	index: function() {
+		return new IndexRoute({
+			container  : this.container,
+			collection : this.collection
+		});
+	},
+//
+//	show: function() {
+//		return new ShowRoute({
+//			container  : this.container,
+//			collection : this.collection
+//		});
+//	}
+});
+
+},{"./../common/router.js":"/Users/Chris/Dev/swiffer/src/public/src/common/router.js","./collection":"/Users/Chris/Dev/swiffer/src/public/src/issues/collection.js","./index/route":"/Users/Chris/Dev/swiffer/src/public/src/issues/index/route.js","backbone.radio":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/build/backbone.radio.js"}],"/Users/Chris/Dev/swiffer/src/public/src/modal/alert/template.hbs":[function(require,module,exports){
 // hbsfy compiled Handlebars template
 var Handlebars = require('hbsfy/runtime');
 module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
@@ -38456,6 +38737,19 @@ require('backbone.iobind');
 require('backbone.iosync');
 
 //require('src/common/sync');
+
+
+//from SO.com/questions/7616461
+String.prototype.hashCode = function() {
+	var hash = 0, i, chr, len;
+	if (this.length == 0) return hash;
+	for (i = 0, len = this.length; i < len; i+=1) {
+		chr = this.charCodeAt(i);
+		hash = ((hash << 5) - hash) + chr;
+		hash |= 0; // Convert to 32bit integer
+	}
+	return  hash;
+};
 
 
 },{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone-query-parameters":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/backbone.queryparams.js","backbone.iobind":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.iobind/dist/backbone.iobind.min.js","backbone.iosync":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.iobind/dist/backbone.iosync.min.js","backbone.syphon":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js","bootstrap":"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js","jquery":"/Users/Chris/Dev/swiffer/src/public/node_modules/jquery/dist/jquery.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/collection.js":[function(require,module,exports){

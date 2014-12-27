@@ -6,7 +6,7 @@ var template = require('./composite-template.hbs');
 
 module.exports = CompositeView.extend({
 	template: template,
-	className: 'exception exception--index container',
+	className: 'exceptions exceptions--index container',
 
 	initialize: function(options) {
 		this.models = options.collection.models;

@@ -83,12 +83,13 @@
 
 			extend(rpcgw.options, options);
 
+			//@c4 please don't kill me... I'm being lazy
 			delete rpcgw.options.apiRoot;
 			delete rpcgw.options.apiKey;
 
 			setInterval(function() {
 				rpcgw.post('poll');
-			}, 10000);
+			}, 10000)
 
 			return this;
 		},
@@ -97,8 +98,7 @@
 			data = extend({}, rpcgw.options, data);
 			data.apiKey = rpcgw.apiKey;
 			data.clientTime = (new Date()).getTime();
-			//flag request to be ignored by request tracker
-			data.noTrack = true;
+			data.isSwiffer = true;
 
 			return $.ajax({
 				type: "POST",
@@ -112,8 +112,7 @@
 			data = extend({}, rpcgw.options, data);
 			data.apiKey = rpcgw.apiKey;
 			data.clientTime = (new Date()).getTime();
-			//flag request to be ignored by request tracker
-			data.noTrack = true;
+			data.isSwiffer = true;
 
 			return $.ajax({
 				type: "GET",
@@ -180,7 +179,7 @@
 							options = isObject(arguments[0]) ? arguments[0] : arguments[1],
 							requestUrl = (options && options.url ? options.url : arguments[0]);
 
-						if (options.noTrack) {
+						if (options.isSwiffer) {
 							//pass through directly, don't track
 							return _ajax.apply(this, arguments);
 						}

@@ -51,6 +51,11 @@ app.module('index', {
 //  container: app.layout.content
 //});
 
+app.module('issues', {
+	moduleClass: require('src/issues/module'),
+	container: app.layout.content
+});
+
 app.module('exceptions', {
 	moduleClass: require('src/exceptions/module'),
 	container: app.layout.content
