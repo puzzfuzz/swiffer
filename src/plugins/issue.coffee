@@ -31,7 +31,6 @@ class ExceptionHandler
 				.chain()
 				.groupBy 'errorMessage'
 				.map (value, key)->
-					console.log('running issue mapper')
 					m = _(value).max (val) -> val.clientTime
 					{ message: key, exceptions: value, recent: m.clientTime}
 				.value()
