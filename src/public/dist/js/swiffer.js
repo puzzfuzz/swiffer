@@ -3,7 +3,7 @@
 	 * Swiffer client-side script inclusion
 	 */
 
-	var default_options = {
+	var _defaultOptions = function(){return {
 		onerror: true,		//Automatically bind onerror handler
 		apiRoot : null,     //REQUIRED - route to the Swiffer API server
 		apiKey : null,      //REQUIRED - local API key for connecting to the Swiffer API server
@@ -14,8 +14,9 @@
 		session : (new Date()).getTime(), //session identifier; defaults to current timestamp in milliseconds
 		useSocket: false,   //boolean flag for whether to connect over socket or use traditional REST api
 		socketURL: null,    //optional socket url to use; if none specified apiRoot will be used (only when useSocket === true)
-		$: window.$         //jQuery reference; defaults to standard window.$ - can be overridden on initialization
-	},
+		$: window.$,        //jQuery reference; defaults to standard window.$ - can be overridden on initialization
+		requestTracker: true//track and time all ajax requests fired by the host app, allowing for client-side slow query tracking
+	}},
 
 	/**
 	 * Cherry-picked underscore convenience methods
@@ -82,17 +83,12 @@
 
 			extend(rpcgw.options, options);
 
-			//@c4 please don't kill me... I'm being lazy
 			delete rpcgw.options.apiRoot;
 			delete rpcgw.options.apiKey;
 
-			if (options.poll !== false) {
-				setInterval(function() {
-					rpcgw.post('poll', {
-						lastIdle: App ? App.lastIdle : +new Date()
-					});
-				}, 10000);
-			}
+			setInterval(function() {
+				rpcgw.post('poll');
+			}, 10000);
 
 			return this;
 		},
@@ -101,6 +97,8 @@
 			data = extend({}, rpcgw.options, data);
 			data.apiKey = rpcgw.apiKey;
 			data.clientTime = (new Date()).getTime();
+			//flag request to be ignored by request tracker
+			data.noTrack = true;
 
 			return $.ajax({
 				type: "POST",
@@ -114,6 +112,8 @@
 			data = extend({}, rpcgw.options, data);
 			data.apiKey = rpcgw.apiKey;
 			data.clientTime = (new Date()).getTime();
+			//flag request to be ignored by request tracker
+			data.noTrack = true;
 
 			return $.ajax({
 				type: "GET",
@@ -122,7 +122,9 @@
 				contentType: 'application/json'
 			});
 		}
-	};
+	},
+
+	requestTrackers = {};
 
 	var Swiffer = {
 		api : null,
@@ -133,20 +135,19 @@
 			requireProperties(options, ['apiRoot', 'apiKey']);
 
 			options.apiRoot = options.apiRoot.replace(/\/*$/, '/');
-
-			Swiffer.options = extend(default_options, options);
+			Swiffer.options = extend(_defaultOptions(), options);
 			Swiffer.initialized = true;
 
 			if (Swiffer.options.onerror) {
-				(function(_onerror) {
-					window.onerror = function(){
-						if (_onerror) { _onerror.apply(this, arguments); }
-						Swiffer.onError.apply(this, arguments);
-					};
-				}(window.onerror));
-
-				// don't pass it on...
+				Swiffer.initOnError();
+				// defensive against re-init
 				delete Swiffer.options.onerror;
+			}
+
+			if (Swiffer.options.requestTracker) {
+				Swiffer.initRequestTracker();
+				// defensive against re-init
+				delete Swiffer.options.requestTracker;
 			}
 
 			if (this.options.useSocket) {
@@ -159,6 +160,43 @@
 			}
 
 			return initProgress;
+		},
+
+		initOnError: function(){
+			(function(_onerror) {
+				window.onerror = function(){
+					if (_onerror) { _onerror.apply(this, arguments); }
+					Swiffer.onError.apply(this, arguments);
+				};
+			}(window.onerror));
+		},
+
+		initRequestTracker: function() {
+			if (Swiffer.options.$ && Swiffer.options.$.ajax) {
+				(function(_ajax) {
+					Swiffer.options.$.ajax = function(){
+						var deff,
+							//$.ajax signature is either (url, options) or (options[.url])
+							options = isObject(arguments[0]) ? arguments[0] : arguments[1],
+							requestUrl = (options && options.url ? options.url : arguments[0]);
+
+						if (options.noTrack) {
+							//pass through directly, don't track
+							return _ajax.apply(this, arguments);
+						}
+
+						if (_ajax) { deff = _ajax.apply(this, arguments); }
+						requestTrackers[requestUrl] = (new Date()).getTime();
+						deff.always(function(){
+							var requestTime = (new Date()).getTime() - requestTrackers[requestUrl];
+							delete requestTrackers[requestUrl];
+							console.log("request finished - time:%i url:%s", requestTime, requestUrl);
+						});
+
+						return deff;
+					};
+				}(Swiffer.options.$.ajax));
+			}
 		},
 
 		exception: function(exception){
