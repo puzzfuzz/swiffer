@@ -5964,8 +5964,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js":[function(require,module,exports){
 (function(root, factory) {
 
   if (typeof define === 'function' && define.amd) {
@@ -6451,8 +6451,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","jquery":"/Users/Chris/Dev/swiffer/src/public/node_modules/jquery/dist/jquery.js","underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js":[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -8063,8 +8063,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
 (function (global){
 
 ; jQuery = global.jQuery = require("jquery");

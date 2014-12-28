@@ -33,7 +33,12 @@ class RedisDatabase extends AbstractDatabase
 
 	pushList: (table, bucket, value)->
 		deferr = Q.defer()
-		@client.rpush "#{table}:#{bucket}", JSON.stringify(value), @createCallback(deferr)
+		#allow for a null bucket
+		if (bucket)
+			bucket = ':'+bucket
+		else
+			bucket = ''
+		@client.rpush "#{table}#{bucket}", JSON.stringify(value), @createCallback(deferr)
 
 		deferr.promise
 
@@ -57,7 +62,12 @@ class RedisDatabase extends AbstractDatabase
 
 	getList: (table, bucket)->
 		deferr = Q.defer()
-		@client.lrange "#{table}:#{bucket}", 0, -1, @createCallback(deferr, (data)->
+		#allow for a null bucket
+		if (bucket)
+			bucket = ':'+bucket
+		else
+			bucket = ''
+		@client.lrange "#{table}#{bucket}", 0, -1, @createCallback(deferr, (data)->
 				_(data).map (d)-> 
 					d = JSON.parse d if d != "[object Object]"
 					d

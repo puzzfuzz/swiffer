@@ -9,7 +9,9 @@
 		"exception",
 		"route",
         "session",
-        "event"
+        "event",
+		"issue",
+		"request"
 	],
 
 	"database": "redis"

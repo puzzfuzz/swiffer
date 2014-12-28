@@ -4,19 +4,17 @@ bodyParser = require 'body-parser'
 
 class EventsHandler
 	api:
-		'events:read': 'getEvents'
+		'requests:read': 'getRequests'
 
 	constructor: (@logger, @swiffer, @events)->
 		@router = express.Router()
 
 		@router.use bodyParser.json()
-		@router.post '/event', @save
+		@router.post '/request', @save
 
 
-	getEvents: (data, callback)->
-		if !data.id
-			callback 'id parameter required', null
-		@swiffer.db.getList "events", data.id
+	getRequests: (data, callback)->
+		@swiffer.db.getList "requests"
 		.catch (err)->
 				console.log err
 				callback err, null
@@ -24,28 +22,21 @@ class EventsHandler
 				callback null, (_(data).sortBy (value, i)=> i)
 
 	save: (req, res, next)=>
-		events = _.clone(req.body)
+		clientRequest = _.clone(req.body)
 
-		events.id = events.clientTime
+		clientRequest.id = clientRequest.clientTime
+		console.log "saving request: %s",clientRequest.url
 
-		@swiffer.db.pushList "events", events.session, events
+		@swiffer.db.pushList "requests", null, clientRequest
 		.catch (err)->
-				console.log "Error pushing routes!", err
+				console.log "Error pushing requests!", err
 
 		data =
-			name: 'event:create'
-			data: events
+			name: 'request:create'
+			data: clientRequest
 
 		@events.emit 'io', data
 		@events.emit 'axon', data
-
-		#emit exception as a session event
-		data =
-			name: 'session/' + events.session + ":event"
-			data: events
-
-		@events.emit 'io', data
-
 
 		res.status(200).json({ error: null })
 

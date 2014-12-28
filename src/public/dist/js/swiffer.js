@@ -98,13 +98,13 @@
 			data = extend({}, rpcgw.options, data);
 			data.apiKey = rpcgw.apiKey;
 			data.clientTime = (new Date()).getTime();
-			data.isSwiffer = true;
 
 			return $.ajax({
 				type: "POST",
 				url: rpcgw.apiRoot + path,
 				data: JSON.stringify(data),
-				contentType: 'application/json'
+				contentType: 'application/json',
+				noTrack: true
 			});
 		},
 		get: function(path, data) {
@@ -112,13 +112,13 @@
 			data = extend({}, rpcgw.options, data);
 			data.apiKey = rpcgw.apiKey;
 			data.clientTime = (new Date()).getTime();
-			data.isSwiffer = true;
 
 			return $.ajax({
 				type: "GET",
 				url: rpcgw.apiRoot + path,
 				data: JSON.stringify(data),
-				contentType: 'application/json'
+				contentType: 'application/json',
+				noTrack: true
 			});
 		}
 	},
@@ -179,17 +179,17 @@
 							options = isObject(arguments[0]) ? arguments[0] : arguments[1],
 							requestUrl = (options && options.url ? options.url : arguments[0]);
 
-						if (options.isSwiffer) {
+						if (options.noTrack) {
 							//pass through directly, don't track
 							return _ajax.apply(this, arguments);
 						}
 
 						if (_ajax) { deff = _ajax.apply(this, arguments); }
 						requestTrackers[requestUrl] = (new Date()).getTime();
-						deff.always(function(){
+						deff.always(function(dataOrXHR, textStatus, xhrOrErrorThrown){
 							var requestTime = (new Date()).getTime() - requestTrackers[requestUrl];
 							delete requestTrackers[requestUrl];
-							console.log("request finished - time:%i url:%s", requestTime, requestUrl);
+							Swiffer.trackRequest(requestUrl, requestTime, textStatus);
 						});
 
 						return deff;
@@ -206,10 +206,12 @@
 			return rpcgw.post(api, data);
 		},
 
-		event: function(eventName, eventData) {
-			return rpcgw.post('event', {
-				eventName: eventName,
-				eventData: eventData
+		trackRequest: function(requestUrl, requestTime, code) {
+			console.log("request finished: %s!- time:%i url:%s", code, requestTime, requestUrl);
+			Swiffer.send('request', {
+				url: requestUrl,
+				time: requestTime,
+				code: code
 			})
 		},
 
