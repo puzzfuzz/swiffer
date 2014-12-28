@@ -8067,8 +8067,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
 (function (global){
 
 ; jQuery = global.jQuery = require("jquery");
@@ -38815,7 +38815,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (helper = helpers.time) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.time); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
-    + "</span>\n                    <span class=\"label label-default\">";
+    + "ms</span>\n                    <span class=\"label label-default\">";
   if (helper = helpers.code) { stack1 = helper.call(depth0, {hash:{},data:data}); }
   else { helper = (depth0 && depth0.code); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
   buffer += escapeExpression(stack1)
