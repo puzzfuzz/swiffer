@@ -4,7 +4,7 @@ bodyParser = require 'body-parser'
 
 class EventsHandler
 	api:
-		'requests:read': 'getRequests'
+		'request:read': 'getRequests'
 
 	constructor: (@logger, @swiffer, @events)->
 		@router = express.Router()

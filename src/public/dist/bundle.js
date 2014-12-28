@@ -57,6 +57,11 @@ app.module('issues', {
 	container: app.layout.content
 });
 
+app.module('requests', {
+	moduleClass: require('./requests/module.js'),
+	container: app.layout.content
+});
+
 app.module('exceptions', {
 	moduleClass: require('./exceptions/module.js'),
 	container: app.layout.content
@@ -67,10 +72,9 @@ app.module('sessions', {
 	container: app.layout.content
 });
 
-
 Backbone.history.start();
 
-},{"./application/application.js":"/Users/Chris/Dev/swiffer/src/public/src/application/application.js","./exceptions/module.js":"/Users/Chris/Dev/swiffer/src/public/src/exceptions/module.js","./flashes/module.js":"/Users/Chris/Dev/swiffer/src/public/src/flashes/module.js","./header/module.js":"/Users/Chris/Dev/swiffer/src/public/src/header/module.js","./index/module.js":"/Users/Chris/Dev/swiffer/src/public/src/index/module.js","./issues/module.js":"/Users/Chris/Dev/swiffer/src/public/src/issues/module.js","./modal/module.js":"/Users/Chris/Dev/swiffer/src/public/src/modal/module.js","./plugins":"/Users/Chris/Dev/swiffer/src/public/src/plugins.js","./sessions/module.js":"/Users/Chris/Dev/swiffer/src/public/src/sessions/module.js","backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone.marionette":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/lib/core/backbone.marionette.js"}],"/Users/Chris/Dev/swiffer/node_modules/underscore/underscore.js":[function(require,module,exports){
+},{"./application/application.js":"/Users/Chris/Dev/swiffer/src/public/src/application/application.js","./exceptions/module.js":"/Users/Chris/Dev/swiffer/src/public/src/exceptions/module.js","./flashes/module.js":"/Users/Chris/Dev/swiffer/src/public/src/flashes/module.js","./header/module.js":"/Users/Chris/Dev/swiffer/src/public/src/header/module.js","./index/module.js":"/Users/Chris/Dev/swiffer/src/public/src/index/module.js","./issues/module.js":"/Users/Chris/Dev/swiffer/src/public/src/issues/module.js","./modal/module.js":"/Users/Chris/Dev/swiffer/src/public/src/modal/module.js","./plugins":"/Users/Chris/Dev/swiffer/src/public/src/plugins.js","./requests/module.js":"/Users/Chris/Dev/swiffer/src/public/src/requests/module.js","./sessions/module.js":"/Users/Chris/Dev/swiffer/src/public/src/sessions/module.js","backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone.marionette":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/lib/core/backbone.marionette.js"}],"/Users/Chris/Dev/swiffer/node_modules/underscore/underscore.js":[function(require,module,exports){
 //     Underscore.js 1.7.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -5964,8 +5968,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.marionette/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js":[function(require,module,exports){
 (function(root, factory) {
 
   if (typeof define === 'function' && define.amd) {
@@ -6451,8 +6455,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","jquery":"/Users/Chris/Dev/swiffer/src/public/node_modules/jquery/dist/jquery.js","underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js":[function(require,module,exports){
 //     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
@@ -8063,8 +8067,8 @@ module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbon
 }));
 
 },{"underscore":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/node_modules/underscore/underscore.js":[function(require,module,exports){
-module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js")
-},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
+module.exports=require("/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js")
+},{"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/node_modules/underscore/underscore.js"}],"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js":[function(require,module,exports){
 (function (global){
 
 ; jQuery = global.jQuery = require("jquery");
@@ -37614,30 +37618,15 @@ var template = require('./item-template.hbs');
 var _ = require('lodash');
 
 module.exports = ItemView.extend({
-	tagName: 'div',
 	template: template,
 	className: 'exceptions__item panel panel-default',
-
-//	attributes: function () {
-//		return {
-//			href: '#exceptions/' + this.model.get('id')
-//		};
-//	},
 
 	modelEvents: {
 		'all': 'render'
 	},
 
-//	onBeforeRender: function() {
-//		if (this.model.get('__isNew')) {
-//			this.$el.addClass('collapse');
-//		}
-//	},
-
 	onRender: function(){
 		if (this.model.get('__isNew')) {
-//			setTimeout(function(){this.$el.collapse('show')}, 1000);
-
 			this.model.set({'__isNew':false},{silent:true});
 		}
 	},
@@ -37646,7 +37635,6 @@ module.exports = ItemView.extend({
 		var self = this,
 			timeout = (this.model.collection ? this.model.collection.indexOf(this.model) : 0) * 150;
 		_.delay(function(){self.$el.addClass('added');}, timeout);
-		console.log('onAttach called');
 	}
 
 });
@@ -38752,7 +38740,223 @@ String.prototype.hashCode = function() {
 };
 
 
-},{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone-query-parameters":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/backbone.queryparams.js","backbone.iobind":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.iobind/dist/backbone.iobind.min.js","backbone.iosync":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.iobind/dist/backbone.iosync.min.js","backbone.syphon":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js","bootstrap":"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js","jquery":"/Users/Chris/Dev/swiffer/src/public/node_modules/jquery/dist/jquery.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/collection.js":[function(require,module,exports){
+},{"backbone":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone/backbone.js","backbone-query-parameters":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone-query-parameters/backbone.queryparams.js","backbone.iobind":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.iobind/dist/backbone.iobind.min.js","backbone.iosync":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.iobind/dist/backbone.iosync.min.js","backbone.syphon":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.syphon/lib/backbone.syphon.js","bootstrap":"/Users/Chris/Dev/swiffer/src/public/node_modules/bootstrap/dist/js/bootstrap.js","jquery":"/Users/Chris/Dev/swiffer/src/public/node_modules/jquery/dist/jquery.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/collection.js":[function(require,module,exports){
+var Collection = require('./../common/socketCollection.js');
+var Model = require('./model');
+
+module.exports = Collection.extend({
+	url: 'request',
+	model: Model,
+
+	comparator: function(model) {
+		return -model.get("time"); //highest latency requests first
+	}
+});
+},{"./../common/socketCollection.js":"/Users/Chris/Dev/swiffer/src/public/src/common/socketCollection.js","./model":"/Users/Chris/Dev/swiffer/src/public/src/requests/model.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/index/composite-template.hbs":[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  
+
+
+  return "<div class=\"page-header\">\n    <h1>Requests:</h1>\n</div>\n\n<div class=\"new-item\"></div>\n<div class=\"list-group\"></div>\n";
+  });
+
+},{"hbsfy/runtime":"/Users/Chris/Dev/swiffer/src/public/node_modules/hbsfy/runtime.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/index/composite-view.js":[function(require,module,exports){
+var _ = require('lodash');
+var CompositeView = require('./../../common/composite-view.js');
+var Collection = require('./../../common/collection.js');
+var RequestItemView = require('./item-view');
+var template = require('./composite-template.hbs');
+
+module.exports = CompositeView.extend({
+	template: template,
+	className: 'requests requests--index container',
+
+	initialize: function(options) {
+		this.models = options.collection.models;
+	},
+
+	childView: RequestItemView,
+	childViewContainer: 'div.list-group',
+
+	onBeforeRender: function() {
+		//animate new issues being added to the top of the list, only after initial render
+		this.onBeforeAddChild = function(){};
+	},
+
+	onRender: function(){
+		//animate new issues being added to the top of the list, only after initial render
+		this.onBeforeAddChild = this.newRequestAdded;
+	},
+
+	newRequestAdded: function(requestView) {
+		this.$childViewContainer.prepend(requestView.$el);
+		requestView.onAttach();
+	},
+
+	templateHelpers: function() {
+
+	}
+});
+
+},{"./../../common/collection.js":"/Users/Chris/Dev/swiffer/src/public/src/common/collection.js","./../../common/composite-view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/composite-view.js","./composite-template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/requests/index/composite-template.hbs","./item-view":"/Users/Chris/Dev/swiffer/src/public/src/requests/index/item-view.js","lodash":"/Users/Chris/Dev/swiffer/src/public/node_modules/lodash/dist/lodash.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/index/item-template.hbs":[function(require,module,exports){
+// hbsfy compiled Handlebars template
+var Handlebars = require('hbsfy/runtime');
+module.exports = Handlebars.template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, helper, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<div class=\"panel-heading\">\n    <div class=\"list-group-item-heading\">\n        <div class=\"clearfix\">\n            <div class=\"pull-left\">\n                <h4>\n                    <span class=\"label label-primary\">";
+  if (helper = helpers.time) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.time); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n                    <span class=\"label label-default\">";
+  if (helper = helpers.code) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.code); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "</span>\n                    ";
+  if (helper = helpers.url) { stack1 = helper.call(depth0, {hash:{},data:data}); }
+  else { helper = (depth0 && depth0.url); stack1 = typeof helper === functionType ? helper.call(depth0, {hash:{},data:data}) : helper; }
+  buffer += escapeExpression(stack1)
+    + "\n                </h4>\n            </div>\n        </div>\n    </div>\n</div>\n\n";
+  return buffer;
+  });
+
+},{"hbsfy/runtime":"/Users/Chris/Dev/swiffer/src/public/node_modules/hbsfy/runtime.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/index/item-view.js":[function(require,module,exports){
+var ItemView = require('./../../common/item-view.js');
+var template = require('./item-template.hbs');
+var _ = require('lodash');
+var moment = require('moment');
+
+module.exports = ItemView.extend({
+	tagName: 'div',
+	template: template,
+	className: 'requests__item panel panel-default',
+
+	modelEvents: {
+		'all': 'render'
+	},
+
+	onRender: function(){
+		if (this.model.get('__isNew')) {
+			this.model.set({'__isNew':false},{silent:true});
+		}
+	},
+
+	onAttach: function() {
+		var self = this,
+			timeout = (this.model.collection ? this.model.collection.indexOf(this.model) : 0) * 150;
+		_.delay(function(){self.$el.addClass('added');}, timeout);
+	},
+
+	templateHelpers: function() {
+
+	}
+
+});
+
+},{"./../../common/item-view.js":"/Users/Chris/Dev/swiffer/src/public/src/common/item-view.js","./item-template.hbs":"/Users/Chris/Dev/swiffer/src/public/src/requests/index/item-template.hbs","lodash":"/Users/Chris/Dev/swiffer/src/public/node_modules/lodash/dist/lodash.js","moment":"/Users/Chris/Dev/swiffer/src/public/node_modules/moment/moment.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/index/route.js":[function(require,module,exports){
+var Route = require('./../../common/route.js');
+var RequestCompositeView = require('./composite-view');
+
+module.exports = Route.extend({
+	initialize: function(options) {
+		this.container = options.container;
+		this.collection = options.collection;
+	},
+
+	fetch: function() {
+		if (this.collection.isNew()) {
+			return this.collection.fetch();
+		}
+	},
+
+	render: function(params) {
+		this.view = new RequestCompositeView({
+			collection: this.collection
+		});
+
+		this.container.show(this.view);
+	}
+});
+
+},{"./../../common/route.js":"/Users/Chris/Dev/swiffer/src/public/src/common/route.js","./composite-view":"/Users/Chris/Dev/swiffer/src/public/src/requests/index/composite-view.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/model.js":[function(require,module,exports){
+var Model = require('./../common/socketModel.js');
+
+module.exports = Model.extend({
+	urlRoot: 'request',
+
+	defaults: {
+		active: false
+	},
+
+	parse : function(data) {
+		data.id = data.id || data.clientTime;
+		return data;
+	}
+});
+
+},{"./../common/socketModel.js":"/Users/Chris/Dev/swiffer/src/public/src/common/socketModel.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/module.js":[function(require,module,exports){
+var Radio = require('backbone.radio');
+var Module = require('./../common/module.js');
+var Router = require('./router');
+
+module.exports = Module.extend({
+	initialize: function() {
+		this.router = new Router(this.options);
+
+		Radio.command('header', 'add', {
+			name: 'Requests',
+			path: 'requests',
+			type: 'primary'
+		});
+	}
+});
+
+},{"./../common/module.js":"/Users/Chris/Dev/swiffer/src/public/src/common/module.js","./router":"/Users/Chris/Dev/swiffer/src/public/src/requests/router.js","backbone.radio":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/build/backbone.radio.js"}],"/Users/Chris/Dev/swiffer/src/public/src/requests/router.js":[function(require,module,exports){
+var Router = require('./../common/router.js');
+var Radio = require('backbone.radio');
+
+var Collection  = require('./collection');
+var RequestIndexRoute  = require('./index/route');
+//var ShowRoute   = require('./show/route');
+
+module.exports = Router.extend({
+	initialize: function(options) {
+		this.container = options.container;
+		this.collection = new Collection();
+	},
+
+	onBeforeEnter: function() {
+		Radio.command('header', 'activate', { path: 'requests' });
+	},
+
+	routes: {
+		'requests'        : 'index',
+//		'requests/:id'    : 'show'
+	},
+
+	index: function() {
+		return new RequestIndexRoute({
+			container  : this.container,
+			collection : this.collection
+		});
+	},
+//
+//	show: function() {
+//		return new ShowRoute({
+//			container  : this.container,
+//			collection : this.collection
+//		});
+//	}
+});
+
+},{"./../common/router.js":"/Users/Chris/Dev/swiffer/src/public/src/common/router.js","./collection":"/Users/Chris/Dev/swiffer/src/public/src/requests/collection.js","./index/route":"/Users/Chris/Dev/swiffer/src/public/src/requests/index/route.js","backbone.radio":"/Users/Chris/Dev/swiffer/src/public/node_modules/backbone.radio/build/backbone.radio.js"}],"/Users/Chris/Dev/swiffer/src/public/src/sessions/collection.js":[function(require,module,exports){
 var Collection = require('./../common/socketCollection.js');
 var Model = require('./model');
 

@@ -56,6 +56,11 @@ app.module('issues', {
 	container: app.layout.content
 });
 
+app.module('requests', {
+	moduleClass: require('src/requests/module'),
+	container: app.layout.content
+});
+
 app.module('exceptions', {
 	moduleClass: require('src/exceptions/module'),
 	container: app.layout.content
@@ -65,6 +70,5 @@ app.module('sessions', {
 	moduleClass: require('src/sessions/module'),
 	container: app.layout.content
 });
-
 
 Backbone.history.start();
