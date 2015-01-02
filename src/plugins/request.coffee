@@ -4,7 +4,7 @@ bodyParser = require 'body-parser'
 #categories = require './requestCategories_base'
 categories = require './requestCategories' #include custom categorizer
 
-class EventsHandler
+class RequestsHandler
 	api:
 		'request:read': 'getRequests'
 
@@ -16,7 +16,7 @@ class EventsHandler
 
 
 	getRequests: (data, callback)->
-		@swiffer.db.getList "requests"
+		@swiffer.db.list "requests"
 		.catch (err)->
 				console.log err
 				callback err, null
@@ -26,21 +26,33 @@ class EventsHandler
 	save: (req, res, next)=>
 		clientRequest = _.clone(req.body)
 
-		clientRequest.id = clientRequest.clientTime
-		console.log "saving request: ",clientRequest.url
+		id = clientRequest.url
 
-		@swiffer.db.pushList "requests", null, clientRequest
-		.catch (err)->
-				console.log "Error pushing requests!", err
+		#check the db for any existing similar requests and roll up interesting data
+		@swiffer.db.get "requests", id
+			.then (data)=>
 
-		data =
-			name: 'request:create'
-			data: clientRequest
+				requestToSave =
+					id: id,
+					url: clientRequest.url,
+					time: [clientRequest.time],
+					clientTime: clientRequest.clientTime,
+					count: 1
+				if data
+					requestToSave.time = requestToSave.time.concat(data.time)
+					requestToSave.count += data.count
 
-		@events.emit 'io', data
-		@events.emit 'axon', data
+				@swiffer.db.put "requests", requestToSave.id, requestToSave
+				.catch (err)->
+						console.log "Error pushing requests!", err
 
-		res.status(200).json({ error: null })
+				data =
+					name: 'request:create'
+					data: requestToSave
 
+				@events.emit 'io', data
+				@events.emit 'axon', data
 
-module.exports = EventsHandler
+				res.status(200).json({ error: null })
+
+module.exports = RequestsHandler
