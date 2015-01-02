@@ -1,6 +1,8 @@
 _ = require 'underscore'
 express = require 'express'
 bodyParser = require 'body-parser'
+#categories = require './requestCategories_base'
+categories = require './requestCategories' #include custom categorizer
 
 class EventsHandler
 	api:
@@ -10,7 +12,7 @@ class EventsHandler
 		@router = express.Router()
 
 		@router.use bodyParser.json()
-		@router.post '/request', @save
+		@router.post '/request', categories.categorize, @save
 
 
 	getRequests: (data, callback)->
@@ -25,7 +27,7 @@ class EventsHandler
 		clientRequest = _.clone(req.body)
 
 		clientRequest.id = clientRequest.clientTime
-		console.log "saving request: %s",clientRequest.url
+		console.log "saving request: ",clientRequest.url
 
 		@swiffer.db.pushList "requests", null, clientRequest
 		.catch (err)->
