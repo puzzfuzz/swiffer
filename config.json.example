@@ -1,0 +1,18 @@
+{
+	"prompt": "Swiffer> ",
+	"port": 1337,
+	"staticRoot": "/public/",
+	"privateKey": "secret",
+
+	"restartTime": 5,
+	"modules": [
+		"exception",
+		"route",
+        "session",
+        "event",
+		"issue",
+		"request"
+	],
+
+	"database": "redis"
+}

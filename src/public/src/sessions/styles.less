@@ -1,0 +1,24 @@
+.session {
+  &__item {
+    transform: translateX(1999px);
+    transition: all 0.3s ease-in;
+    &.added {
+      transform: translateX(0);
+    }
+
+    .event-list {
+      .exception {
+        &:extend(.label-danger);
+      }
+      .route {
+        &:extend(.label-primary);
+      }
+      .event {
+        &:extend(.label-success);
+      }
+    }
+  }
+
+}
+
+

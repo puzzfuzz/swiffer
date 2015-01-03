@@ -2,9 +2,10 @@
   "name": "swiffer",
   "version": "0.0.0",
   "description": "Swiffer error and event pub sub server",
-  "main": "app.js",
+  "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src"
   },
   "repository": {
     "type": "git",
@@ -16,9 +17,21 @@
     "url": "https://github.com/puzzfuzz/swiffer/issues"
   },
   "dependencies": {
-    "underscore": "~1.7.0",
+    "aws-sdk": "^2.1.0",
+    "axon": "^2.0.1",
+    "body-parser": "^1.10.0",
+    "cli-color": "^0.3.2",
+    "coffee-script": "^1.8.0",
+    "dynamodb-doc": "git://github.com/awslabs/dynamodb-document-js-sdk",
+    "express": "^4.0.0",
+    "http": "0.0.0",
+    "q": "^1.1.2",
     "redis": "~0.12.1",
-    "axon": "~2.0.1",
-    "express": "^3.0.0"
+    "socket.io": "~1.2.1",
+    "underscore": "~1.7.0"
+  },
+  "devDependencies": {
+    "browserify": "^7.0.2",
+    "gulp": "^3.8.10"
   }
 }

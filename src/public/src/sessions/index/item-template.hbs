@@ -1,0 +1,19 @@
+<div class="panel-heading">
+    <h4 class="list-group-item-heading">
+        <div class="clearfix">
+            <a class="label label-primary" href="#sessions/{{id}}">{{id}}</a>
+            <span class="label label-{{stateLabel}}">{{stateString}}</span>
+            <span class="label label-info">{{duration}}</span>
+        </div>
+    </h4>
+</div>
+<div class="panel-body">
+    TODO: session info
+    <div class="event-list">
+    {{#each sessionEvents}}
+        <div class="event-wrap">
+            <label class="label {{type}}">{{event}}</label>
+        </div>
+    {{/each}}
+    </div>
+</div>

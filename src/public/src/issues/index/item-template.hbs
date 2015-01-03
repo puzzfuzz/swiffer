@@ -1,0 +1,24 @@
+<div class="panel-heading">
+    <div class="list-group-item-heading">
+        <div class="clearfix">
+            <div class="pull-left">
+                <h4>
+                    {{message}}
+                </h4>
+                <div>
+                    <span class="label label-primary">{{lastSeen}}</span>
+                    <!--<span class="label label-xs label-default">{{id}}</span>-->
+                </div>
+            </div>
+            <button type="button" class="btn btn-danger pull-right" data-toggle="collapse" data-target="#exceptions_{{id}}">{{exceptionCount}}</button>
+            <button type="button" class="btn btn-info pull-right" data-toggle="collapse" data-target="#users_{{id}}">{{userCount}}</button>
+        </div>
+    </div>
+</div>
+<div class="panel-body">
+    Affected users:
+    {{#each users}}
+        <span class="label label-info">{{this.userName}}</span>
+    {{/each}}
+</div>
+

@@ -1,0 +1,23 @@
+<div class="panel-heading">
+    <div class="list-group-item-heading">
+        <div class="clearfix">
+            <div class="pull-left">
+                <h4>
+                    {{errorMessage}}
+                </h4>
+                <div>
+                    <span class="label label-xs label-default">{{id}}</span>
+                    <span class="label label-xs label-default">{{userName}}|{{user}}</span>
+                </div>
+            </div>
+            <button type="button" class="btn btn-danger pull-right" data-toggle="collapse" data-target="#trace_{{id}}">Stack</button>
+        </div>
+    </div>
+</div>
+<div class="panel-body">
+    <p>
+        <span>session:</span><a class="label label-primary" href="#sessions/{{session}}">{{session}}</a>
+    </p>
+    <pre id="trace_{{id}}" class="collapse">{{trace}}</pre>
+</div>
+

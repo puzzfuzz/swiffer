@@ -1,0 +1,20 @@
+{
+	"curly": true,
+	"forin": true,
+	"immed": true,
+	"latedef": true,
+	"newcap": true,
+	"noarg": true,
+	"undef": true,
+	"unused": true,
+
+
+	"browser": false,
+	"devel": true,
+	"jquery": false,
+	"node": true,
+	"predef": [
+	]
+
+
+}
